@@ -4,6 +4,7 @@ mod actions;
 use serde_json::json;
 use std::env;
 use parser::Arguments;
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 
 fn main() {
     // Collect the path from command-line arguments
@@ -13,7 +14,6 @@ fn main() {
     // Parse the JSON file into test cases
     let test_cases = parser::parse_test_cases(path).expect("Failed to parse JSON");
 
-    // Prepare the response structure
     let mut responses = serde_json::Map::new();
 
     for (id, test_case) in test_cases {
@@ -34,6 +34,22 @@ fn main() {
                     json!(null)
                 }
             }
+            "poly2block" => {
+                if let Arguments::Poly2Block { semantic, coefficients } = test_case.arguments {
+                    let block = actions::poly2block::execute(semantic, coefficients);
+                    json!({"block": STANDARD.encode(block)}) // encoding to base 64
+                } else {
+                    json!(null)
+                }
+            }
+            "block2poly" => {
+                if let Arguments::Block2Poly { semantic, block } = test_case.arguments {
+                    let coefficients = actions::block2poly::execute(semantic, block);
+                    json!({"coefficients": coefficients})
+                } else {
+                    json!(null)
+                }
+            }
             _ => json!(null), // Fallback for unsupported actions
         };
 
@@ -41,9 +57,7 @@ fn main() {
         responses.insert(id, result);
     }
 
-    // Prepare the final JSON output
+    // Prepare and print the final JSON output
     let output = json!({ "responses": responses });
-
-    // Print the final JSON result
     println!("{}", serde_json::to_string_pretty(&output).unwrap());
 }
