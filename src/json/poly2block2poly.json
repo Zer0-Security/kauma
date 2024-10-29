@@ -12,6 +12,18 @@
                 ]
             }                
         },
+        "affbfd17dd4781": {
+            "action": "poly2block",
+            "arguments": {
+                "semantic": "xex",
+                "coefficients": [
+                    12,
+                    127,
+                    9,
+                    0
+                ]
+            }                
+        },
         "affbf4fc-4d2a-474781": {
             "action": "block2poly",
             "arguments": {

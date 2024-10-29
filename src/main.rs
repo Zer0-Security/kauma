@@ -36,8 +36,8 @@ fn main() {
             }
             "poly2block" => {
                 if let Arguments::Poly2Block { semantic, coefficients } = test_case.arguments {
-                    let block = actions::poly2block::execute(semantic, coefficients);
-                    json!({"block": STANDARD.encode(block)}) // encoding to base 64
+                    let byte_vect = actions::poly2byte::execute(semantic, coefficients);
+                    json!({"block": STANDARD.encode(byte_vect)}) // encoding byte_vect to base 64 String
                 } else {
                     json!(null)
                 }
@@ -46,6 +46,14 @@ fn main() {
                 if let Arguments::Block2Poly { semantic, block } = test_case.arguments {
                     let coefficients = actions::block2poly::execute(semantic, block);
                     json!({"coefficients": coefficients})
+                } else {
+                    json!(null)
+                }
+            }
+            "gfmul" => {
+                if let Arguments::GfMul { semantic, a, b} = test_case.arguments {
+                    let product = actions::gfmul::execute(semantic, a, b);
+                    json!({"product": STANDARD.encode(product.to_le_bytes())}) // encoding to base 64
                 } else {
                     json!(null)
                 }

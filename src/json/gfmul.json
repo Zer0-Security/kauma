@@ -1,0 +1,12 @@
+{
+    "testcases": {
+        "affbf44781": {
+            "action": "gfmul",
+            "arguments": {
+                "semantic": "xex",
+                "a": "ARIAAAAAAAAAAAAAAAAAgA==",
+                "b": "AgAAAAAAAAAAAAAAAAAAAA=="
+            }
+        }
+    }
+}    
