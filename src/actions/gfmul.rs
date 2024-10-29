@@ -1,10 +1,8 @@
-use super::{block2poly, poly2byte};
-
-pub fn execute(semantic: String, a: String, b: String) -> u128{
+pub fn execute(a: u128, b: u128) -> u128{
     
     let mut result = 0;
-    let mut a = block_to_u128(semantic.clone(), a);
-    let mut b = block_to_u128(semantic.clone(), b);
+    let mut a = a;
+    let mut b = b;
     let reduction_poly: u128 = 0x87;
 
     while b != 0 {
@@ -23,17 +21,6 @@ pub fn execute(semantic: String, a: String, b: String) -> u128{
         }
 
         b >>= 1; // Shift 'b' to the right to process the next bit
-    }
-    result
-}
-
-fn block_to_u128(semantic: String, block: String) -> u128 {
-    
-    let byte_vec = poly2byte::execute(semantic.clone(), block2poly::execute(semantic.clone(), block));
-    let mut result: u128 = 0;
-
-    for byte in byte_vec.iter().rev() {
-        result = (result << 8) | *byte as u128;
     }
     result
 }

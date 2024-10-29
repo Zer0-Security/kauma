@@ -1,4 +1,4 @@
-pub fn execute(sematic: String, mut coefficients: Vec<u8>) -> Vec<u8>{
+pub fn execute(sematic: &String, mut coefficients: Vec<u8>) -> Vec<u8>{
     let byte_vec: Vec<u8> = vec![0x0; 16];
 
     coefficients.sort();
