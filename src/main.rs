@@ -12,7 +12,6 @@ fn main() {
 
     // Parse the JSON file into test cases
     let test_cases = parser::parse_test_cases(path).expect("Failed to parse JSON");
-
     let mut responses = serde_json::Map::new();
 
     for (id, test_case) in test_cases {
@@ -59,7 +58,15 @@ fn main() {
             }
             "sea128" => {
                 if let Arguments::Sea128 { mode , key, input} = test_case.arguments {
-                    let output = actions::sea128::execute(mode, key, input);
+                    let output = actions::sea128::execute(mode, &actions::de_encode_base64::decode(key).unwrap(), actions::de_encode_base64::decode(input).unwrap());
+                    json!({"output": actions::de_encode_base64::encode(output)}) // encoding to base 64
+                } else {
+                    json!(null)
+                }
+            }
+            "xex" => {
+                if let Arguments::Xex { mode , key, tweak, input} = test_case.arguments {
+                    let output = actions::xex::execute(mode, key, tweak, input);
                     json!({"output": actions::de_encode_base64::encode(output)}) // encoding to base 64
                 } else {
                     json!(null)

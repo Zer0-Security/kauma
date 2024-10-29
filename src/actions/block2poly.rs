@@ -2,7 +2,7 @@ use super::de_encode_base64;
 
 pub fn execute(sematic: &String, block: String) -> Vec<u8>{
     let coefficients: Vec<u8> = Vec::new();  
-    let byte_vec = de_encode_base64::decode(block).unwrap_or(vec![0, 16]);
+    let byte_vec = de_encode_base64::decode(block).unwrap_or(vec![0x0; 16]);
 
     match sematic.as_str() {
         "xex" => xex(byte_vec, coefficients),

@@ -1,21 +1,17 @@
 use openssl::symm::{Cipher, Crypter, Mode};
 
-use super::de_encode_base64;
-
-pub fn execute(mode: String, key: String, input: String) -> Vec<u8> {
+pub fn execute(mode: String, key: &Vec<u8>, input: Vec<u8>) -> Vec<u8> {
 
     let xor: Vec<u8> = vec![0xc0, 0xff, 0xee, 0xc0, 0xff, 0xee, 0xc0, 0xff, 0xee, 0xc0, 0xff, 0xee, 0xc0, 0xff, 0xee, 0x11];
-    let key = de_encode_base64::decode(key).unwrap_or(vec![0, 16]);
-    let input= de_encode_base64::decode( input).unwrap_or(vec![0, 16]);
 
     match mode.as_str() {
-        "encrypt" => encrypt(key, input, xor),
-        "decrypt" => decrypt(key, input, xor),
+        "encrypt" => encrypt(&key, input, xor),
+        "decrypt" => decrypt(&key, input, xor),
         _ => input
     }
 }
 
-fn encrypt(key: Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
+fn encrypt(key: &Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
     let cipher = Cipher::aes_128_ecb();
     let mut crypter = Crypter::new(cipher, Mode::Encrypt, &key, None).unwrap();
 
@@ -32,7 +28,7 @@ fn encrypt(key: Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
     ciphertext
 }
 
-fn decrypt(key: Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
+fn decrypt(key: &Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
     let cipher = Cipher::aes_128_ecb();
     let mut crypter = Crypter::new(cipher, Mode::Decrypt, &key, None).unwrap();
 

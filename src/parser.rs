@@ -13,15 +13,17 @@ pub struct TestCase {
     pub arguments: Arguments,
 }
 
+
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
+#[serde(deny_unknown_fields)]
 pub enum Arguments {
     AddSubNumbers { number1: i32, number2: i32 },
     Poly2Block { semantic: String, coefficients: Vec<u8> },
     Block2Poly { semantic: String, block: String },
     GfMul { semantic: String, a: String, b: String },
     Sea128 { mode: String, key: String, input: String },
-    //Xex { mode: String, key: String, tweak: String, input: String },
+    Xex { mode: String, key: String, tweak: String, input: String },
 }
 
 pub fn parse_test_cases(path: &str) -> Result<HashMap<String, TestCase>, serde_json::Error> {

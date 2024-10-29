@@ -1,6 +1,6 @@
 {
     "testcases": {
-                "affbfehiof44781": {
+        "affbfehiof44781": {
             "action": "sea128",
             "arguments": {
                 "mode": "encrypt",
