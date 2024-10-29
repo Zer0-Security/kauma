@@ -20,7 +20,7 @@ pub enum Arguments {
     Poly2Block { semantic: String, coefficients: Vec<u8> },
     Block2Poly { semantic: String, block: String },
     GfMul { semantic: String, a: String, b: String },
-    //Sea128 { mode: String, key: String, input: String },
+    Sea128 { mode: String, key: String, input: String },
     //Xex { mode: String, key: String, tweak: String, input: String },
 }
 

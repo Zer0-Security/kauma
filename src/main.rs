@@ -57,6 +57,14 @@ fn main() {
                     json!(null)
                 }
             }
+            "sea128" => {
+                if let Arguments::Sea128 { mode , key, input} = test_case.arguments {
+                    let output = actions::sea128::execute(mode, key, input);
+                    json!({"output": actions::de_encode_base64::encode(output)}) // encoding to base 64
+                } else {
+                    json!(null)
+                }
+            }
             _ => json!(null), // Fallback for unsupported actions
         };
 

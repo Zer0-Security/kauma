@@ -1,0 +1,20 @@
+{
+    "testcases": {
+                "affbfehiof44781": {
+            "action": "sea128",
+            "arguments": {
+                "mode": "encrypt",
+                "key": "istDASeincoolerKEYrofg==",
+                "input": "yv66vvrO263eyviIiDNEVQ=="
+            }
+        },
+        "affbhujklfehiof44781": {
+            "action": "sea128",
+            "arguments": {
+                "mode": "decrypt",
+                "key": "istDASeincoolerKEYrofg==",
+                "input": "D5FDo3iVBoBN9gVi9/MSKQ=="
+            }
+        }
+    }
+}    
