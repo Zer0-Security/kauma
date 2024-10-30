@@ -21,3 +21,27 @@ fn xex(byte_vec: Vec<u8>, mut coefficients: Vec<u8>) -> Vec<u8> {
     }
     coefficients
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn xex_normal() {
+        let result = execute(&"xex".to_string(), "ARIAAAAAAAAAAAAAAAAAgA==".to_string());
+        assert_eq!(result, vec![0, 9, 12, 127]);
+    }
+
+    #[test]
+    fn xex_empty_input() {
+        let result = execute(&"xex".to_string(), "".to_string());
+        assert_eq!(result, Vec::<u8>::new());
+    }
+
+    #[test]
+    #[should_panic]
+    fn xex_check_sorted_output() {
+        let result = execute(&"xex".to_string(), "ARIAAAAAAAAAAAAAAAAAgA==".to_string());
+        assert_eq!(result, vec![9, 0, 127, 12]);
+    }
+}

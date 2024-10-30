@@ -24,3 +24,25 @@ pub fn execute(a: u128, b: u128) -> u128{
     }
     result
 }
+
+mod tests {
+    use super::*;
+
+    #[test]
+    fn multiply_by_zero() {
+        let result = execute(0x3456789, 0x0);
+        assert_eq!(result, 0);
+    }
+
+    #[test]
+    fn two_numbers() {
+        let result = execute(0x01120000000000000000000000000080, 0x02000000000000000000000000000000);
+        assert_eq!(result, 0x11cfc00000000000000000000000087);
+    }
+
+    #[test]
+    fn multiply_by_one() {
+        let result = execute(0x657890543286, 0x1);
+        assert_eq!(result, 0x657890543286);
+    }
+}

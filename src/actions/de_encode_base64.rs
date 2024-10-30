@@ -33,3 +33,45 @@ pub fn byte_to_u128(semantic: &String, byte_vec: Vec<u8>) -> u128 {
     }
 
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn decode_normal() {
+        let result = decode("ARIAAAAAAAAAAAAAAAAAgA==".to_string()).unwrap();
+
+        let expected: Vec<u8> = vec![0x01, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80];
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn encode_normal() {
+
+        let input: Vec<u8> = vec![0x01, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80];
+        let result = encode(input);
+
+        let expected= "ARIAAAAAAAAAAAAAAAAAgA==".to_string();
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn xex_block_to_u128() {
+
+        let result = block_to_u128(&"xex".to_string(), "ARIAAAAAAAAAAAAAAAAAgA==".to_string());
+
+        assert_eq!(result, 0x80000000000000000000000000001201);
+    }
+
+    #[test]
+    fn xex_byte_to_u128() {
+
+        let input: Vec<u8> = vec![0x01, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80];
+        let result = byte_to_u128(&"xex".to_string(), input);
+
+        assert_eq!(result, 0x80000000000000000000000000001201);
+    }
+}

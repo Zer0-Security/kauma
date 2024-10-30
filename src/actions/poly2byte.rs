@@ -18,3 +18,20 @@ fn xex(coefficients: Vec<u8>, mut byte_vec: Vec<u8>) -> Vec<u8> {
     }
     byte_vec
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn xex_empty_coefficients() {
+        let result = execute(&"xex".to_string(), vec![]);
+        assert_eq!(result, vec![0;16]);
+    }
+
+    #[test]
+    fn xex_four_exponents() {
+        let result = execute( &"xex".to_string(), vec![127, 0, 12, 9]);
+        assert_eq!(result, vec![1, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]);
+    }
+}
