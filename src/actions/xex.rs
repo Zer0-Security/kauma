@@ -9,10 +9,10 @@ pub fn execute(mode: String, key: String, tweak: String, input: String) -> Vec<u
     let key2: Vec<u8> = key[16..32].to_vec();
 
     let tweak = de_encode_base64::decode(tweak).unwrap_or(vec![0; 16]);
-    let mut input= de_encode_base64::decode( input).unwrap_or(vec![0; 16]);
+    let input= de_encode_base64::decode( input).unwrap_or(vec![0; 16]);
 
     if input.is_empty() || input.len() < 16 {
-        input = vec![0; 16]; // If no input is given make a 16 byte vec with 0x0 so it still runns
+       return input // If no input is given exit and return the empty string
     }
 
     let tweak_encrypted = sea128::execute(String::from("encrypt"), &key2, tweak);
