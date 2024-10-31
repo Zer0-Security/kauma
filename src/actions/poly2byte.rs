@@ -14,7 +14,7 @@ fn xex(coefficients: Vec<u8>, mut byte_vec: Vec<u8>) -> Vec<u8> {
         let byte: u8 = coefficient / 8;
         let bit = coefficient % 8;
 
-        byte_vec[byte as usize] = byte_vec[byte as usize] ^ (1<<bit); 
+        byte_vec[byte as usize] ^=  1 << bit; 
     }
     byte_vec
 }

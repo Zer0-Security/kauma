@@ -12,8 +12,10 @@ pub fn execute(mode: String, key: &Vec<u8>, input: Vec<u8>) -> Vec<u8> {
 }
 
 fn encrypt(key: &Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
+
+    // Prepare the Ciper and Crypter for encrypting with aes128
     let cipher = Cipher::aes_128_ecb();
-    let mut crypter = Crypter::new(cipher, Mode::Encrypt, &key, None).unwrap();
+    let mut crypter = Crypter::new(cipher, Mode::Encrypt, &key, None).unwrap(); 
 
     crypter.pad(false);
 
@@ -22,6 +24,7 @@ fn encrypt(key: &Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
 
     ciphertext.truncate(count); // Truncate the buffer to the actual output size
 
+    // XOR the ciphertext and the fixed xor value byte by byte
     for i in 0..ciphertext.len() {
         ciphertext[i] ^= xor[i];
     }
@@ -29,11 +32,14 @@ fn encrypt(key: &Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
 }
 
 fn decrypt(key: &Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
+
+    // Prepare the Ciper and Crypter for decrypting aes128
     let cipher = Cipher::aes_128_ecb();
     let mut crypter = Crypter::new(cipher, Mode::Decrypt, &key, None).unwrap();
 
     crypter.pad(false);
 
+    // XOR the ciphertext and the fixed xor value byte by byte
     let mut xor_result = input.clone();
     for i in 0..xor_result.len() {
         xor_result[i] ^= xor[i];
@@ -47,6 +53,7 @@ fn decrypt(key: &Vec<u8>, input: Vec<u8>, xor: Vec<u8>) -> Vec<u8> {
     plaintext
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 

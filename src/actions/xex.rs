@@ -28,25 +28,33 @@ fn de_encrypt(mode: String, key1: Vec<u8>, mut tweak_encrypted: Vec<u8>, input: 
 
     let mut output: Vec<u8> = Vec::new();
 
+    // Seperate the input(byte vector) into chunks of 16 byte and iterate over them 
     for chunk in input.chunks_exact(16) {
         let mut chunk = chunk.to_vec();
 
+        // XOR the chunk and the encrypted tweak
         for i in 0..chunk.len() {
             chunk[i] ^= tweak_encrypted[i];
         }
 
+        // En- or decrypt the chunk
         chunk = sea128::execute(String::from(mode.as_str()), &key1.clone(), chunk);
 
+        // XOR the chunk and the encrypted tweak
         for i in 0..chunk.len() {
             chunk[i] ^= tweak_encrypted[i];
         }
 
+        // Append the chunk to the output vector
         output.append(&mut chunk);
+
+        // Multiply the tweak by alpha
         tweak_encrypted = gfmul::execute(de_encode_base64::byte_to_u128(&"xex".to_string(), tweak_encrypted), 0x2).to_le_bytes().to_vec();
     }
     output
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 

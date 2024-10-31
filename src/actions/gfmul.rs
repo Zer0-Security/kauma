@@ -11,7 +11,7 @@ pub fn execute(a: u128, b: u128) -> u128{
             result ^= a;
         }
 
-        let carry = a & (1 << 127); // Check if the high bit of 'a' is set (i.e., overflow beyond 128 bits)
+        let carry = a & (1 << 127); // Check if the high bit of 'a' is set (i.e., overflow beyond 128 bits at shift)
 
         a <<= 1; // Shift 'a' to the left (multiply by alpha)
 
@@ -25,6 +25,7 @@ pub fn execute(a: u128, b: u128) -> u128{
     result
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 

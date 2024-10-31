@@ -11,11 +11,11 @@ pub fn execute(sematic: &String, block: String) -> Vec<u8>{
 }
 
 fn xex(byte_vec: Vec<u8>, mut coefficients: Vec<u8>) -> Vec<u8> {
-    for (byte_index, byte) in byte_vec.iter().enumerate() {
+    for (byte_index, byte) in byte_vec.iter().enumerate() { // Iterate through the bytes and bits in the byte vector
         for bit_index in 0..8 {
             let bit = (byte >> bit_index) & 1;
-            if bit == 1 {
-                coefficients.push(8 * byte_index as u8 + bit_index); 
+            if bit == 1 { 
+                coefficients.push(8 * byte_index as u8 + bit_index); // If the bit is a 1 calculate the coresponding coeffiecient and append to output
             }
         }
     }
