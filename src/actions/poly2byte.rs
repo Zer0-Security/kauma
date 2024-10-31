@@ -5,6 +5,7 @@ pub fn execute(sematic: &String, mut coefficients: Vec<u8>) -> Vec<u8>{
 
     match sematic.as_str() {
         "xex" => xex(coefficients,byte_vec),
+        "gcm" => gcm(coefficients,byte_vec),
         _ => byte_vec
     }
 }
@@ -15,6 +16,16 @@ fn xex(coefficients: Vec<u8>, mut byte_vec: Vec<u8>) -> Vec<u8> {
         let bit = coefficient % 8;
 
         byte_vec[byte as usize] ^=  1 << bit; 
+    }
+    byte_vec
+}
+
+fn gcm(coefficients: Vec<u8>, mut byte_vec: Vec<u8>) -> Vec<u8> {
+    for coefficient in coefficients {
+        let byte: u8 = coefficient / 8;
+        let bit = coefficient % 8;
+
+        byte_vec[byte as usize] ^=  1 << 7 - bit; 
     }
     byte_vec
 }
