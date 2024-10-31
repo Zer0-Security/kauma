@@ -29,6 +29,12 @@ pub fn byte_to_u128(semantic: &String, byte_vec: Vec<u8>) -> u128 {
             }
             result
         }
+        "gcm" => {
+            for byte in byte_vec.iter().rev() {
+                result = (result << 8) | byte.reverse_bits() as u128;
+            }
+            result
+        }
         _ => 0
     }
 
