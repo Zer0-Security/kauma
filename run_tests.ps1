@@ -1,9 +1,11 @@
 # Name for the temporary container
 $CONTAINER_NAME = "rust-ci"
 
+docker pull ghcr.io/johndoe31415/labwork-docker:master
+docker tag ghcr.io/johndoe31415/labwork-docker:master labwork
 # Start the Docker container in detached mode
 Write-Host "Starting the Docker container..."
-docker run -d -it --name $CONTAINER_NAME labwork sleep infinity
+docker run --network none -d -it --name $CONTAINER_NAME labwork sleep infinity
 
 # Check if the container started correctly
 if ($LASTEXITCODE -ne 0) {
