@@ -56,7 +56,24 @@ pub fn u128_to_byte(semantic: &String, num: u128) -> Vec<u8> {
         }
         _ => vec![0; 16]
     }
+}
 
+pub fn u32_to_byte(semantic: &String, num: u32) -> Vec<u8> {
+
+    match semantic.as_str() {
+        "xex" => {
+            num.to_le_bytes().to_vec()
+        }
+        "gcm" => {
+            let mut byte_vec = num.to_le_bytes().to_vec();
+
+            for byte in byte_vec.iter_mut().rev() {
+                *byte = byte.reverse_bits();
+            }
+            byte_vec
+        }
+        _ => vec![0; 4]
+    }
 }
 
 #[cfg(test)]
