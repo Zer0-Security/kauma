@@ -27,6 +27,7 @@ pub fn execute(mode: String, key: String, tweak: String, input: String) -> Vec<u
 fn de_encrypt(mode: String, key1: Vec<u8>, mut tweak_encrypted: Vec<u8>, input: Vec<u8>) -> Vec<u8> {
 
     let mut output: Vec<u8> = Vec::new();
+    let alpha = vec![0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0];
 
     // Seperate the input(byte vector) into chunks of 16 byte and iterate over them 
     for chunk in input.chunks_exact(16) {
@@ -49,7 +50,7 @@ fn de_encrypt(mode: String, key1: Vec<u8>, mut tweak_encrypted: Vec<u8>, input: 
         output.append(&mut chunk);
 
         // Multiply the tweak by alpha
-        tweak_encrypted = gfmul::execute(de_encode_base64::byte_to_u128(&"xex".to_string(), tweak_encrypted), 0x2).to_le_bytes().to_vec();
+        tweak_encrypted = gfmul::execute( "xex".to_string(), tweak_encrypted, alpha.clone());
     }
     output
 }

@@ -4,6 +4,7 @@ mod actions;
 use serde_json::json;
 use std::env;
 use parser::Arguments;
+use actions::*;
 
 fn main() {
     // Collect the path from command-line arguments
@@ -18,7 +19,7 @@ fn main() {
         let result = match test_case.action.as_str() {
             "add_numbers" => {
                 if let Arguments::AddSubNumbers { number1, number2 } = test_case.arguments {
-                    let sum = actions::add_numbers::execute(number1, number2);
+                    let sum = add_numbers::execute(number1, number2);
                     json!({"sum": sum})
                 } else {
                     json!(null)
@@ -26,7 +27,7 @@ fn main() {
             }
             "subtract_numbers" => {
                 if let Arguments::AddSubNumbers { number1, number2 } = test_case.arguments {
-                    let difference = actions::subtract_numbers::execute(number1, number2);
+                    let difference = subtract_numbers::execute(number1, number2);
                     json!({"difference": difference})
                 } else {
                     json!(null)
@@ -34,15 +35,15 @@ fn main() {
             }
             "poly2block" => {
                 if let Arguments::Poly2Block { semantic, coefficients } = test_case.arguments {
-                    let byte_vect = actions::poly2byte::execute(&semantic, coefficients);
-                    json!({"block": actions::de_encode_base64::encode(byte_vect)}) // encoding byte_vect to base 64 String
+                    let byte_vect = poly2byte::execute(&semantic, coefficients);
+                    json!({"block": de_encode_base64::encode(byte_vect)}) // encoding byte_vect to base 64 String
                 } else {
                     json!(null)
                 }
             }
             "block2poly" => {
                 if let Arguments::Block2Poly { semantic, block } = test_case.arguments {
-                    let coefficients = actions::block2poly::execute(&semantic, block);
+                    let coefficients = block2poly::execute(&semantic, block);
                     json!({"coefficients": coefficients})
                 } else {
                     json!(null)
@@ -50,24 +51,24 @@ fn main() {
             }
             "gfmul" => {
                 if let Arguments::GfMul { semantic , a, b} = test_case.arguments {
-                    let product = actions::gfmul::execute(actions::de_encode_base64::block_to_u128(&semantic, a), actions::de_encode_base64::block_to_u128(&semantic, b));
-                    json!({"product": actions::de_encode_base64::encode(product.to_le_bytes())}) // encoding to base 64
+                    let product = gfmul::execute(semantic, de_encode_base64::decode( a).unwrap(), de_encode_base64::decode( b).unwrap());
+                    json!({"product": de_encode_base64::encode(product)}) // encoding to base 64
                 } else {
                     json!(null)
                 }
             }
             "sea128" => {
                 if let Arguments::Sea128 { mode , key, input} = test_case.arguments {
-                    let output = actions::sea128::execute(mode, &actions::de_encode_base64::decode(key).unwrap(), actions::de_encode_base64::decode(input).unwrap());
-                    json!({"output": actions::de_encode_base64::encode(output)}) // encoding to base 64
+                    let output = sea128::execute(mode, &de_encode_base64::decode(key).unwrap(), de_encode_base64::decode(input).unwrap());
+                    json!({"output": de_encode_base64::encode(output)}) // encoding to base 64
                 } else {
                     json!(null)
                 }
             }
             "xex" => {
                 if let Arguments::Xex { mode , key, tweak, input} = test_case.arguments {
-                    let output = actions::xex::execute(mode, key, tweak, input);
-                    json!({"output": actions::de_encode_base64::encode(output)}) // encoding to base 64
+                    let output = xex::execute(mode, key, tweak, input);
+                    json!({"output": de_encode_base64::encode(output)}) // encoding to base 64
                 } else {
                     json!(null)
                 }
