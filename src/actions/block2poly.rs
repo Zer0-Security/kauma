@@ -20,6 +20,7 @@ fn xex(byte_vec: Vec<u8>, mut coefficients: Vec<u8>) -> Vec<u8> {
             }
         }
     }
+    coefficients.sort();
     coefficients
 }
 
@@ -32,6 +33,7 @@ fn gcm(byte_vec: Vec<u8>, mut coefficients: Vec<u8>) -> Vec<u8> {
             }
         }
     }
+    coefficients.sort();
     coefficients
 }
 
