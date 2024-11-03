@@ -18,6 +18,13 @@
                 "semantic": "xex",
                 "block": "ARIAAAAAAAAAAAAAAAAAgA=="
             }
+        },
+        "1": {
+            "action": "block2poly",
+            "arguments": {
+                "semantic": "gcm",
+                "block": "shAAAAAAAAAAAAAAAAAAAA=="
+            }
         }
     }
 }    

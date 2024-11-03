@@ -1,4 +1,4 @@
-use crate::actions::{gfmul, sea128};
+use crate::actions::{gfmul, rsa_sea_128};
 use super::de_encode_base64;
 
 pub fn execute(mode: String, key: String, tweak: String, input: String) -> Vec<u8>{
@@ -15,7 +15,7 @@ pub fn execute(mode: String, key: String, tweak: String, input: String) -> Vec<u
        return input // If no input is given exit and return the empty string
     }
 
-    let tweak_encrypted = sea128::execute(String::from("encrypt"), &key2, tweak);
+    let tweak_encrypted = rsa_sea_128::execute(&"sea128".to_string(), &String::from("encrypt"), &key2, tweak);
 
    match mode.as_str() {
         "encrypt" => de_encrypt(mode, key1, tweak_encrypted, input),
@@ -39,7 +39,7 @@ fn de_encrypt(mode: String, key1: Vec<u8>, mut tweak_encrypted: Vec<u8>, input: 
         }
 
         // En- or decrypt the chunk
-        chunk = sea128::execute(String::from(mode.as_str()), &key1.clone(), chunk);
+        chunk = rsa_sea_128::execute(&"sea128".to_string(), &mode, &key1, chunk);
 
         // XOR the chunk and the encrypted tweak
         for i in 0..chunk.len() {
@@ -50,7 +50,7 @@ fn de_encrypt(mode: String, key1: Vec<u8>, mut tweak_encrypted: Vec<u8>, input: 
         output.append(&mut chunk);
 
         // Multiply the tweak by alpha
-        tweak_encrypted = gfmul::execute( "xex".to_string(), tweak_encrypted, alpha.clone());
+        tweak_encrypted = gfmul::execute( &"xex".to_string(), tweak_encrypted, alpha.clone());
     }
     output
 }

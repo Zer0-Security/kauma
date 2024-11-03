@@ -51,7 +51,10 @@ fn main() {
             }
             "gfmul" => {
                 if let Arguments::GfMul { semantic , a, b} = test_case.arguments {
-                    let product = gfmul::execute(semantic, de_encode_base64::decode( a).unwrap(), de_encode_base64::decode( b).unwrap());
+                    let a = de_encode_base64::decode( a).unwrap();
+                    let b = de_encode_base64::decode( b).unwrap();
+
+                    let product = gfmul::execute(&semantic, a, b);
                     json!({"product": de_encode_base64::encode(product)}) // encoding to base 64
                 } else {
                     json!(null)
@@ -59,7 +62,10 @@ fn main() {
             }
             "sea128" => {
                 if let Arguments::Sea128 { mode , key, input} = test_case.arguments {
-                    let output = sea128::execute(mode, &de_encode_base64::decode(key).unwrap(), de_encode_base64::decode(input).unwrap());
+                    let key = de_encode_base64::decode( key).unwrap();
+                    let input = de_encode_base64::decode( input).unwrap();
+
+                    let output = rsa_sea_128::execute(&"sea128".to_string(), &mode, &key, input);
                     json!({"output": de_encode_base64::encode(output)}) // encoding to base 64
                 } else {
                     json!(null)
@@ -69,6 +75,41 @@ fn main() {
                 if let Arguments::Xex { mode , key, tweak, input} = test_case.arguments {
                     let output = xex::execute(mode, key, tweak, input);
                     json!({"output": de_encode_base64::encode(output)}) // encoding to base 64
+                } else {
+                    json!(null)
+                }
+            }
+            "gcm_encrypt" => {
+                if let Arguments::GcmEncrypt { algorithm, nonce, key, plaintext, ad } = test_case.arguments {
+                    let nonce = de_encode_base64::decode(nonce).unwrap();
+                    let key = de_encode_base64::decode(key).unwrap();
+                    let plaintext = de_encode_base64::decode(plaintext).unwrap();
+                    let ad = de_encode_base64::decode(ad).unwrap();
+
+                    let output = gcm::encrypt(algorithm, nonce, key, plaintext, ad);
+                    json!({
+                        "ciphertext": de_encode_base64::encode(output.0),
+                        "tag": de_encode_base64::encode(output.1),
+                        "L": de_encode_base64::encode(output.2),
+                        "H": de_encode_base64::encode(output.3)
+                    })
+                } else {
+                    json!(null)
+                }
+            }
+            "gcm_decrypt" => {
+                if let Arguments::GcmDecrypt { algorithm, nonce, key, ciphertext, ad, tag } = test_case.arguments {
+                    let nonce = de_encode_base64::decode(nonce).unwrap();
+                    let key = de_encode_base64::decode(key).unwrap();
+                    let ciphertext = de_encode_base64::decode(ciphertext).unwrap();
+                    let ad = de_encode_base64::decode(ad).unwrap();
+                    let tag = de_encode_base64::decode(tag).unwrap();
+                    
+                    let output = gcm::decrypt(algorithm, nonce, key, ciphertext, ad, tag);
+                    json!({
+                        "authentic": de_encode_base64::encode(output.0),
+                        "plaintext": de_encode_base64::encode(output.1)
+                    })
                 } else {
                     json!(null)
                 }
