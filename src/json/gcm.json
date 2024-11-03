@@ -1,6 +1,6 @@
 {
     "testcases": {
-        "affbfehiof44781": {
+        "1ffbfehiof44781": {
             "action": "gcm_encrypt",
             "arguments": {
                 "algorithm": "aes128",
@@ -10,7 +10,7 @@
                 "ad": "QUQtRGF0ZW4="
             }
         },
-        "affbhujklfehiof44781": {
+        "2ffbhujklfehiof44781": {
             "action": "gcm_encrypt",
             "arguments": {
                 "algorithm": "sea128",
@@ -20,18 +20,18 @@
                 "ad": "QUQtRGF0ZW4="
             }
         },
-        "5249uoihfjnz48392": {
+        "3249uoihfjnz48392": {
             "action": "gcm_decrypt",
             "arguments": {
                 "algorithm": "aes128",
                 "nonce": "4gF+BtR3ku/PUQci",
                 "key": "Xjq/GkpTSWoe3ZH0F+tjrQ==",
-                "ciphertext": "0cI/Wg4R3URfrVFZ0hw/vg==",
+                "ciphertext": "ET3RmvH/Hbuxba63EuPRrw==",
                 "ad": "QUQtRGF0ZW4=",
-                "tag": "ysDdzOSnqLH0MQ+Mkb23gw=="
+                "tag": "Mp0APJb/ZIURRwQlMgNN/w=="
             }
         },
-        "fgcwbuqo54678iuehjdbgvztw4": {
+        "4gcwbuqo54678iuehjdbgvztw4": {
             "action": "gcm_decrypt",
             "arguments": {
                 "algorithm": "sea128",
@@ -41,6 +41,6 @@
                 "ad": "UknNF3AKBaF/8GUnFUw=",
                 "tag": "sN0+1fG+WSOHMswF7IBnZA=="
             }
-        }   
+        }
     }
 }    
