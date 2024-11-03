@@ -1,6 +1,6 @@
 use super::de_encode_base64;
 
-pub fn execute(semantic: String, a: Vec<u8>, b: Vec<u8>) -> Vec<u8>{
+pub fn execute(semantic: &String, a: Vec<u8>, b: Vec<u8>) -> Vec<u8>{
     
     match semantic.as_str() {
         "xex" => xex(a, b),

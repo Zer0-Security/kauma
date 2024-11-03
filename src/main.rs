@@ -54,7 +54,7 @@ fn main() {
                     let a = de_encode_base64::decode( a).unwrap();
                     let b = de_encode_base64::decode( b).unwrap();
 
-                    let product = gfmul::execute(semantic, a, b);
+                    let product = gfmul::execute(&semantic, a, b);
                     json!({"product": de_encode_base64::encode(product)}) // encoding to base 64
                 } else {
                     json!(null)

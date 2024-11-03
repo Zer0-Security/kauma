@@ -58,7 +58,7 @@ pub fn u128_to_byte(semantic: &String, num: u128) -> Vec<u8> {
     }
 }
 
-pub fn u32_to_byte(semantic: &String, num: u32) -> Vec<u8> {
+pub fn u64_to_byte(semantic: &String, num: u64) -> Vec<u8> {
 
     match semantic.as_str() {
         "xex" => {
