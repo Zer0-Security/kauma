@@ -52,10 +52,6 @@ fn ghash(ciphertext: Vec<u8>, auth_key: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u
     let counter_ciphertext = de_encode_base64::u64_to_byte(&"xex".to_string(), (ciphertext.len() * 8) as u64);
     let l: Vec<u8> = counter_ad.iter().rev().chain(counter_ciphertext.iter().rev()).cloned().collect();
 
-    println!("Counter AD:{:?}", counter_ad);
-    println!("Counter_ci:{:?}", counter_ciphertext);
-    println!("L:{:?}", l);
-
     let mut q: Vec<u8> = vec![0; 16];
 
     for chunk in ad.chunks(16) {
