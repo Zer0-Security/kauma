@@ -1,3 +1,5 @@
+use openssl::symm::Mode;
+
 use super::{rsa_sea_128, de_encode_base64, gfmul};
 
 pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>) {
@@ -8,6 +10,46 @@ pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u
 
     let auth_key = rsa_sea_128::execute(&algorithm, mode, &key, vec![0; 16]);
     let y0_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
+
+    let ciphertext = de_encrypt(algorithm, mode, plaintext, nonce, key);
+    let (mut q, l) = ghash(ciphertext.clone(), auth_key.clone(), ad);
+
+    for i in 0..q.len() {
+        q[i] ^= y0_encrypted[i];
+    }
+
+    (ciphertext, q, l, auth_key)
+}
+
+pub fn decrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, ciphertext: Vec<u8>, ad: Vec<u8>, tag: Vec<u8>) -> (bool, Vec<u8>) {
+
+    let mode = &"encrypt".to_string();
+    let counter: u32 = 1;
+
+    let y = nonce.iter().chain(counter.to_be_bytes().iter()).cloned().collect(); 
+
+    let auth_key = rsa_sea_128::execute(&algorithm, mode, &key, vec![0; 16]);
+    let y0_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
+
+    let (mut q, _l) = ghash(ciphertext.clone(), auth_key.clone(), ad);
+
+    for i in 0..q.len() {
+        q[i] ^= y0_encrypted[i];
+    }
+
+    let plaintext = de_encrypt(algorithm, mode, ciphertext, nonce, key);
+    
+    let authentic: bool;
+    if q == tag {
+        authentic = true;
+    } else {
+        authentic = false;
+    }
+
+    (authentic, plaintext)
+}
+
+fn de_encrypt(algorithm: String, mode: &String ,plaintext: Vec<u8>, nonce: Vec<u8>, key: Vec<u8>) -> Vec<u8> {
 
     let mut ciphertext: Vec<u8> = Vec::new();
 
@@ -30,23 +72,10 @@ pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u
         ciphertext.append(&mut plaintext);
 
     }
-
-    let (mut q, l) = ghash(ciphertext.clone(), auth_key.clone(), ad);
-
-    for i in 0..q.len() {
-        q[i] ^= y0_encrypted[i];
-    }
-
-    (ciphertext, q, l, auth_key)
-}
-
-pub fn decrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, ciphertext: Vec<u8>, ad: Vec<u8>, tag: Vec<u8>) -> (Vec<u8>, Vec<u8>) {
-    (vec![0; 16], vec![0; 16])
+    ciphertext
 }
 
 fn ghash(ciphertext: Vec<u8>, auth_key: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>) {
-
-    let semantic = "gcm".to_string();
 
     let counter_ad = de_encode_base64::u64_to_byte(&"xex".to_string(), (ad.len() * 8) as u64);
     let counter_ciphertext = de_encode_base64::u64_to_byte(&"xex".to_string(), (ciphertext.len() * 8) as u64);

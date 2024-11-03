@@ -107,7 +107,7 @@ fn main() {
                     
                     let output = gcm::decrypt(algorithm, nonce, key, ciphertext, ad, tag);
                     json!({
-                        "authentic": de_encode_base64::encode(output.0),
+                        "authentic": output.0,
                         "plaintext": de_encode_base64::encode(output.1)
                     })
                 } else {
