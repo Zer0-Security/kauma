@@ -1,3 +1,5 @@
+use openssl::symm::Mode;
+
 use super::{rsa_sea_128, de_encode_base64, gfmul};
 
 pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>) {
@@ -9,28 +11,7 @@ pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u
     let auth_key = rsa_sea_128::execute(&algorithm, mode, &key, vec![0; 16]);
     let y0_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
 
-    let mut ciphertext: Vec<u8> = Vec::new();
-
-    // Seperate the plaintext (byte vector) into chunks of 16 byte and iterate over them 
-    for plaintext in plaintext.chunks(16).enumerate() {
-        let counter: u32 = plaintext.0 as u32 + 2;
-        let mut plaintext = plaintext.1.to_vec();
-
-        let y = nonce.iter().chain(counter.to_be_bytes().iter()).cloned().collect();
-
-        // En- or decrypt the chunk
-        let y_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
-
-        // XOR the chunk and the encrypted tweak
-        for i in 0..plaintext.len() {
-            plaintext[i] ^= y_encrypted[i];
-        }
-
-        // Append the chunk to the output vector
-        ciphertext.append(&mut plaintext);
-
-    }
-
+    let ciphertext = de_encrypt(algorithm, mode, plaintext, nonce, key);
     let (mut q, l) = ghash(ciphertext.clone(), auth_key.clone(), ad);
 
     for i in 0..q.len() {
@@ -56,26 +37,7 @@ pub fn decrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, ciphertext: Vec<
         q[i] ^= y0_encrypted[i];
     }
 
-    let mut plaintext: Vec<u8> = Vec::new();
-
-    for ciphertext in ciphertext.chunks(16).enumerate() {
-        let counter: u32 = ciphertext.0 as u32 + 2;
-        let mut ciphertext = ciphertext.1.to_vec();
-
-        let y = nonce.iter().chain(counter.to_be_bytes().iter()).cloned().collect();
-
-        // En- or decrypt the chunk
-        let y_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
-
-        // XOR the chunk and the encrypted tweak
-        for i in 0..ciphertext.len() {
-            ciphertext[i] ^= y_encrypted[i];
-        }
-
-        // Append the chunk to the output vector
-        plaintext.append(&mut ciphertext);
-
-    }
+    let plaintext = de_encrypt(algorithm, mode, ciphertext, nonce, key);
     
     let authentic: bool;
     if q == tag {
@@ -85,6 +47,32 @@ pub fn decrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, ciphertext: Vec<
     }
 
     (authentic, plaintext)
+}
+
+fn de_encrypt(algorithm: String, mode: &String ,plaintext: Vec<u8>, nonce: Vec<u8>, key: Vec<u8>) -> Vec<u8> {
+
+    let mut ciphertext: Vec<u8> = Vec::new();
+
+    // Seperate the plaintext (byte vector) into chunks of 16 byte and iterate over them 
+    for plaintext in plaintext.chunks(16).enumerate() {
+        let counter: u32 = plaintext.0 as u32 + 2;
+        let mut plaintext = plaintext.1.to_vec();
+
+        let y = nonce.iter().chain(counter.to_be_bytes().iter()).cloned().collect();
+
+        // En- or decrypt the chunk
+        let y_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
+
+        // XOR the chunk and the encrypted tweak
+        for i in 0..plaintext.len() {
+            plaintext[i] ^= y_encrypted[i];
+        }
+
+        // Append the chunk to the output vector
+        ciphertext.append(&mut plaintext);
+
+    }
+    ciphertext
 }
 
 fn ghash(ciphertext: Vec<u8>, auth_key: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>) {
