@@ -1,4 +1,4 @@
-use super::{rsa_sea_128, de_encode_base64, gfmul};
+use super::{aes_sea_128, de_encode_base64, gfmul};
 
 pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>) {
     let mode = &"encrypt".to_string();
@@ -6,8 +6,8 @@ pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u
 
     let y = nonce.iter().chain(counter.to_be_bytes().iter()).cloned().collect(); // Concat nonce and counter
 
-    let auth_key = rsa_sea_128::execute(&algorithm, mode, &key, vec![0; 16]);
-    let y0_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
+    let auth_key = aes_sea_128::execute(&algorithm, mode, &key, vec![0; 16]);
+    let y0_encrypted = aes_sea_128::execute(&algorithm, mode, &key, y);
 
     let ciphertext = de_encrypt(algorithm, mode, plaintext, nonce, key); // Encrypt plaintext with algorithem in JSON 
     let (mut q, l) = ghash(ciphertext.clone(), auth_key.clone(), ad); // Run the GHASH function, gives back Q and L
@@ -26,8 +26,8 @@ pub fn decrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, ciphertext: Vec<
 
     let y = nonce.iter().chain(counter.to_be_bytes().iter()).cloned().collect(); // Concat nonce and counter
 
-    let auth_key = rsa_sea_128::execute(&algorithm, mode, &key, vec![0; 16]);
-    let y0_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
+    let auth_key = aes_sea_128::execute(&algorithm, mode, &key, vec![0; 16]);
+    let y0_encrypted = aes_sea_128::execute(&algorithm, mode, &key, y);
 
     let (mut q, _l) = ghash(ciphertext.clone(), auth_key.clone(), ad); // Run the GHASH function, gives back Q and L
 
@@ -61,7 +61,7 @@ fn de_encrypt(algorithm: String, mode: &String ,plaintext: Vec<u8>, nonce: Vec<u
         let y = nonce.iter().chain(counter.to_be_bytes().iter()).cloned().collect();
 
         // En- or decrypt the chunk
-        let y_encrypted = rsa_sea_128::execute(&algorithm, mode, &key, y);
+        let y_encrypted = aes_sea_128::execute(&algorithm, mode, &key, y);
 
         // XOR the chunk and the encrypted tweak
         for i in 0..plaintext.len() {

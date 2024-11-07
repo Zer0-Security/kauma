@@ -65,7 +65,7 @@ fn main() {
                     let key = de_encode_base64::decode( key).unwrap();
                     let input = de_encode_base64::decode( input).unwrap();
 
-                    let output = rsa_sea_128::execute(&"sea128".to_string(), &mode, &key, input);
+                    let output = aes_sea_128::execute(&"sea128".to_string(), &mode, &key, input);
                     json!({"output": de_encode_base64::encode(output)}) // encoding to base 64
                 } else {
                     json!(null)
@@ -137,4 +137,5 @@ fn main() {
     // Prepare and print the final JSON output
     let output = json!({ "responses": responses });
     println!("{}", serde_json::to_string_pretty(&output).unwrap());
+
 }

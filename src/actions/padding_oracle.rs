@@ -10,8 +10,7 @@ pub fn execute(hostname: String, port: u32, mut iv: Vec<u8>, ciphertext: Vec<u8>
 
         let mut intermediate_state: Vec<u8> = vec![0; 16];
 
-        // Connect to the server
-        let mut stream = TcpStream::connect( hostname.clone() + ":" + &port.to_string())?;   
+        let mut stream = TcpStream::connect(format!("{}:{}", hostname, port))?;  
 
         // Input Ciphertext 
         stream.write(&block.1)?;
