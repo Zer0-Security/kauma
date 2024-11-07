@@ -7,3 +7,4 @@ pub mod de_encode_base64;
 pub mod rsa_sea_128;
 pub mod xex;
 pub mod gcm;
+pub mod padding_oracle;

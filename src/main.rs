@@ -114,6 +114,19 @@ fn main() {
                     json!(null)
                 }
             }
+            "padding_oracle" => {
+                if let Arguments::PaddingOracle { hostname, port, iv, ciphertext } = test_case.arguments {
+                    let iv = de_encode_base64::decode(iv).unwrap();
+                    let ciphertext = de_encode_base64::decode(ciphertext).unwrap();
+                    
+                    let plaintext = padding_oracle::execute(hostname, port, iv, ciphertext).unwrap();
+                    json!({
+                        "plaintext": de_encode_base64::encode(plaintext)
+                    })
+                } else {
+                    json!(null)
+                }
+            }
             _ => json!(null), // Fallback for unsupported actions
         };
 

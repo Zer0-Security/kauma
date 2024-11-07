@@ -25,7 +25,8 @@ pub enum Arguments {
     Sea128 { mode: String, key: String, input: String },
     Xex { mode: String, key: String, tweak: String, input: String },
     GcmEncrypt { algorithm: String, nonce: String, key: String, plaintext: String, ad: String},
-    GcmDecrypt { algorithm: String, nonce: String, key: String, ciphertext: String, ad: String, tag: String}
+    GcmDecrypt { algorithm: String, nonce: String, key: String, ciphertext: String, ad: String, tag: String},
+    PaddingOracle { hostname: String, port: u32, iv: String, ciphertext: String}
 }
 
 pub fn parse_test_cases(path: &str) -> Result<HashMap<String, TestCase>, serde_json::Error> {
