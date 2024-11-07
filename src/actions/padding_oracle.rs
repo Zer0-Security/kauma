@@ -7,7 +7,7 @@ pub fn execute(hostname: String, port: u32, mut iv: Vec<u8>, ciphertext: Vec<u8>
     let mut plaintext = Vec::<u8>::with_capacity(ciphertext.len());
 
     for block in ciphertext.chunks(16).enumerate() {
-        println!("Block Number{:?}", block.0);
+        //println!("Block Number{:?}", block.0);
         let mut intermediate_state: Vec<u8> = vec![0; 16];
 
         let mut stream = TcpStream::connect(format!("{}:{}", hostname, port))?;  
@@ -66,7 +66,7 @@ fn correct_padding(mut stream: &TcpStream, intermediate_state: &Vec<u8>, byte_nu
                 return Ok(i as u8 ^ (16 - byte_num as u8))
             }
         }
-        println!("No correct padding found");
+        //println!("No correct padding found");
         return Ok(0) // No correct padding found
     } else {
         for (i, byte) in buffer.iter().enumerate() {
@@ -96,7 +96,7 @@ fn correct_padding(mut stream: &TcpStream, intermediate_state: &Vec<u8>, byte_nu
                 }
             }
         }
-        println!("No correct padding found");
+        //println!("No correct padding found");
         return Ok(0) // No correct padding found
     }
 }
