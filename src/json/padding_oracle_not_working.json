@@ -1,0 +1,18 @@
+{
+    "testcases": {
+        "padding_oracle_test3": {
+            "action": "padding_oracle",
+            "arguments": {
+                    "hostname": "127.0.0.1",
+                    "port": 1337,
+                    "iv": "",
+                    "ciphertext": "ruxCs5oMXsInEPuzjsYSJ7/+UaePGknaPgrgr5PYDSc="
+            } 
+        }
+    }
+} 
+
+
+
+
+

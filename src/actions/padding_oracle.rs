@@ -5,9 +5,7 @@ use std::vec;
 pub fn execute(hostname: String, port: u32, mut iv: Vec<u8>, ciphertext: Vec<u8>) -> Result<Vec<u8>, io::Error> {
 
     let mut plaintext = Vec::<u8>::with_capacity(ciphertext.len());
-
     for block in ciphertext.chunks(16).enumerate() {
-        //println!("Block Number{:?}", block.0);
         let mut intermediate_state: Vec<u8> = vec![0; 16];
 
         let mut stream = TcpStream::connect(format!("{}:{}", hostname, port))?;  
@@ -21,7 +19,6 @@ pub fn execute(hostname: String, port: u32, mut iv: Vec<u8>, ciphertext: Vec<u8>
 
         let _ = stream.shutdown(std::net::Shutdown::Both);
         
-
         for i in 0..iv.len() {
             intermediate_state[i] ^= iv[i];
         }
@@ -30,7 +27,6 @@ pub fn execute(hostname: String, port: u32, mut iv: Vec<u8>, ciphertext: Vec<u8>
         plaintext.append(&mut intermediate_state);
         iv = block.1.to_vec();
     }
-
     // Return the response as a Vec<u8>
     Ok(plaintext)
 }
@@ -66,7 +62,6 @@ fn correct_padding(mut stream: &TcpStream, intermediate_state: &Vec<u8>, byte_nu
                 return Ok(i as u8 ^ (16 - byte_num as u8))
             }
         }
-        //println!("No correct padding found");
         return Ok(0) // No correct padding found
     } else {
         for (i, byte) in buffer.iter().enumerate() {
@@ -86,17 +81,15 @@ fn correct_padding(mut stream: &TcpStream, intermediate_state: &Vec<u8>, byte_nu
 
                 // Write TCP to server
                 stream.write_all(&q)?;
-                
+
                 // Get resposne from server
                 let mut buffer = [0; 1];
-                let byte_read = stream.read(&mut buffer)?;
-
-                if byte_read == 1 {
+                let _byte_read = stream.read(&mut buffer)?;
+                if buffer[0] == 1 {
                     return Ok(i as u8 ^ (16 - byte_num as u8))
                 }
             }
         }
-        //println!("No correct padding found");
         return Ok(0) // No correct padding found
     }
 }
