@@ -1,0 +1,19 @@
+{
+    "testcases": {
+        "gfpoly_add_1": {
+            "action": "gfpoly_add",
+            "arguments": {
+                "A": [
+                "NeverGonnaGiveYouUpAAA==",
+                "NeverGonnaLetYouDownAA==",
+                "NeverGonnaRunAroundAAA==",
+                "AndDesertYouAAAAAAAAAA=="
+                ],
+                "B": [
+                "KryptoanalyseAAAAAAAAA==",
+                "DHBWMannheimAAAAAAAAAA=="
+                ]
+            }
+        }
+    }
+}    

@@ -8,8 +8,26 @@ pub fn decode(block: String) -> Result<Vec<u8>, DecodeError> {
     }
 }
 
+pub fn decode_vectors(blocks: Vec<String>) -> Vec<Vec<u8>> {
+    let mut a = Vec::new();
+
+    for string in blocks {
+        a.push(decode(string).unwrap());
+    }
+    a
+}
+
 pub fn encode<T: AsRef<[u8]>>(byte_vect: T) -> String {
    general_purpose::STANDARD.encode(byte_vect)
+}
+
+pub fn encode_vectors(input: Vec<Vec<u8>>) -> Vec<String> {
+    let mut base24_vect = Vec::new();
+
+    for byte_vec in input {
+        base24_vect.push(encode(byte_vec));
+    }
+    base24_vect
 }
 
 // pub fn block_to_u128(semantic: &String, block: String) -> u128 {

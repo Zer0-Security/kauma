@@ -127,6 +127,45 @@ fn main() {
                     json!(null)
                 }
             }
+            "gfpoly_add" => {
+                if let Arguments::GfpolyTwoNum { A, B } = test_case.arguments {
+                    let a = de_encode_base64::decode_vectors(A);
+                    let b = de_encode_base64::decode_vectors(B);
+                    
+                    let summ = gfpoly_operations::add(&a, &b);
+                    json!({
+                        "S": de_encode_base64::encode_vectors(summ)
+                    })
+                } else {
+                    json!(null)
+                }
+            }
+            "gfpoly_mul" => {
+                if let Arguments::GfpolyTwoNum { A, B } = test_case.arguments {
+                    let a = de_encode_base64::decode_vectors(A);
+                    let b = de_encode_base64::decode_vectors(B);
+                    
+                    let product = gfpoly_operations::mul(&a, &b);
+                    json!({
+                        "P": de_encode_base64::encode_vectors(product)
+                    })
+                } else {
+                    json!(null)
+                }
+            }
+            "gfpoly_pow" => {
+                if let Arguments::GfpolyPow { A, k } = test_case.arguments {
+                    let a = de_encode_base64::decode_vectors(A);
+                    
+                    let power = gfpoly_operations::pow(&a, k);
+
+                    json!({
+                        "Z": de_encode_base64::encode_vectors(power)
+                    })
+                } else {
+                    json!(null)
+                }
+            }
             _ => json!(null), // Fallback for unsupported actions
         };
 

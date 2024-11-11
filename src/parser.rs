@@ -17,6 +17,7 @@ pub struct TestCase {
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
 #[serde(deny_unknown_fields)]
+#[allow(non_snake_case)]
 pub enum Arguments {
     AddSubNumbers { number1: i32, number2: i32 },
     Poly2Block { semantic: String, coefficients: Vec<u8> },
@@ -24,9 +25,11 @@ pub enum Arguments {
     GfMul { semantic: String, a: String, b: String },
     Sea128 { mode: String, key: String, input: String },
     Xex { mode: String, key: String, tweak: String, input: String },
-    GcmEncrypt { algorithm: String, nonce: String, key: String, plaintext: String, ad: String},
-    GcmDecrypt { algorithm: String, nonce: String, key: String, ciphertext: String, ad: String, tag: String},
-    PaddingOracle { hostname: String, port: u32, iv: String, ciphertext: String}
+    GcmEncrypt { algorithm: String, nonce: String, key: String, plaintext: String, ad: String },
+    GcmDecrypt { algorithm: String, nonce: String, key: String, ciphertext: String, ad: String, tag: String },
+    PaddingOracle { hostname: String, port: u32, iv: String, ciphertext: String },
+    GfpolyTwoNum { A: Vec<String>, B: Vec<String> },
+    GfpolyPow { A: Vec<String>, k: u8 }
 }
 
 pub fn parse_test_cases(path: &str) -> Result<HashMap<String, TestCase>, serde_json::Error> {

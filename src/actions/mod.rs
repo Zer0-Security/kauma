@@ -8,3 +8,4 @@ pub mod aes_sea_128;
 pub mod xex;
 pub mod gcm;
 pub mod padding_oracle;
+pub mod gfpoly_operations;
