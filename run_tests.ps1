@@ -15,7 +15,12 @@ if ($LASTEXITCODE -ne 0) {
 
 # Copy all the files from the current directory into /home inside the container
 Write-Host "Copying files to container..."
-docker cp . "${CONTAINER_NAME}:/r22"
+
+docker exec $CONTAINER_NAME mkdir -p "/r22/src"
+docker cp "./src" "${CONTAINER_NAME}:/r22"
+docker cp "./build" "${CONTAINER_NAME}:/r22"
+docker cp "./kauma" "${CONTAINER_NAME}:/r22"
+docker cp "./Cargo.toml" "${CONTAINER_NAME}:/r22"
 
 # Check if the copy operation succeeded
 if ($LASTEXITCODE -ne 0) {
@@ -24,7 +29,6 @@ if ($LASTEXITCODE -ne 0) {
     docker rm $CONTAINER_NAME
     exit 1
 }
-
 
 # Run the build script inside the container
 Write-Host "Running the build script..."
