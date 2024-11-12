@@ -1,10 +1,11 @@
-use super::gfmul;
+use super::gf_operations;
 
 pub fn add(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 
     let mut a = a.clone();
     let mut b = b.clone();
 
+    // Match the lenght of the longer number and pad the shorter one
     if a.len() < b.len() {
         a.extend(vec![vec![0; 16]; b.len() - a.len()]);
     } else if b.len() < a.len() {
@@ -26,7 +27,7 @@ pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     
     for (i, coefficient_a) in a.iter().enumerate() {
         for (j, coefficient_b) in b.iter().enumerate() {
-            let mul = gfmul::execute(&"gcm".to_string(), coefficient_a.clone(), coefficient_b.clone());
+            let mul = gf_operations::gfmul(&"gcm".to_string(), coefficient_a.clone(), coefficient_b.clone());
             for k in 0..=15 {
                 result[i+j][k] ^=  mul[k];
             }
@@ -35,20 +36,33 @@ pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     result
 }
 
-pub fn pow(a: &Vec<Vec<u8>>, k: u8) -> Vec<Vec<u8>> {
+pub fn pow(a: &Vec<Vec<u8>>, mut k: u8) -> Vec<Vec<u8>> {
+    // Identity element for multiplication (based on your original code)
+    let mut result = vec![vec![0; 16]; a.len()];
+    result[0][0] = 0x80;
 
-    let mut result = a.clone();
+    // Base starts as `a`
+    let mut base = a.clone();
 
-    if k == 0 {
-        let mut result: Vec<u8> = vec![0; 16];
-        result[0] = 0x40;
-        return vec![result]
-    } else if k == 1 {
-        return result
+    while k > 0 {
+        // If k is odd, multiply result by base
+        if k % 2 == 1 {
+            result = mul(&result, &base);
+        }
+        // Square the base
+        base = mul(&base, &base);
+        // Halve k
+        k /= 2;
     }
 
-    for __ in 1..k {
-        result = mul(&result, &a.clone());
+    // Remove trailing zero vectors from `result`
+    while let Some(last) = result.last() {
+        if last.iter().all(|&x| x == 0) {
+            result.pop();
+        } else {
+            break;
+        }
     }
+
     result
 }

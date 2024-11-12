@@ -1,4 +1,4 @@
-use crate::actions::{gfmul, aes_sea_128};
+use crate::actions::{gf_operations, aes_sea_128};
 use super::de_encode_base64;
 
 pub fn execute(mode: String, key: String, tweak: String, input: String) -> Vec<u8>{
@@ -50,7 +50,7 @@ fn de_encrypt(mode: String, key1: Vec<u8>, mut tweak_encrypted: Vec<u8>, input: 
         output.append(&mut chunk);
 
         // Multiply the tweak by alpha
-        tweak_encrypted = gfmul::execute( &"xex".to_string(), tweak_encrypted, alpha.clone());
+        tweak_encrypted = gf_operations::gfmul( &"xex".to_string(), tweak_encrypted, alpha.clone());
     }
     output
 }

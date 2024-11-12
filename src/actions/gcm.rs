@@ -1,4 +1,4 @@
-use super::{aes_sea_128, de_encode_base64, gfmul};
+use super::{aes_sea_128, de_encode_base64, gf_operations};
 
 pub fn encrypt(algorithm: String, nonce: Vec<u8>, key: Vec<u8>, plaintext: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>) {
     let mode = &"encrypt".to_string();
@@ -110,7 +110,7 @@ fn ghash_round(mut q: Vec<u8>, chunk: &[u8], auth_key: &Vec<u8>) -> Vec<u8> {
         q[i] ^= chunk[i];
     }
         
-    gfmul::execute(&semantic, q, auth_key.clone()) // gfmul the state Q and the Key H
+    gf_operations::gfmul(&semantic, q, auth_key.clone()) // gfmul the state Q and the Key H
 }
 
 #[cfg(test)]
