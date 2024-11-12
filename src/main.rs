@@ -177,6 +177,21 @@ fn main() {
                     json!(null)
                 }
             }
+            "gfpoly_divmod" => {
+                if let Arguments::GfpolyTwoNum { A, B } = test_case.arguments {
+                    let a = de_encode_base64::decode_vectors(A);
+                    let b = de_encode_base64::decode_vectors(B);
+                    
+                    let (q, r) = gfpoly_operations::divmod(&a, &b);
+
+                    json!({
+                        "Q": de_encode_base64::encode_vectors(q),
+                        "R": de_encode_base64::encode_vectors(r)
+                    })
+                } else {
+                    json!(null)
+                }
+            }
             _ => json!(null), // Fallback for unsupported actions
         };
 

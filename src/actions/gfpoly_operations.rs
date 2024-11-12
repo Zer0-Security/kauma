@@ -37,11 +37,9 @@ pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 }
 
 pub fn pow(a: &Vec<Vec<u8>>, mut k: u8) -> Vec<Vec<u8>> {
-    // Identity element for multiplication (based on your original code)
     let mut result = vec![vec![0; 16]; a.len()];
-    result[0][0] = 0x80;
+    result[0][0] = 0x80; // Initialise result with 1
 
-    // Base starts as `a`
     let mut base = a.clone();
 
     while k > 0 {
@@ -55,7 +53,7 @@ pub fn pow(a: &Vec<Vec<u8>>, mut k: u8) -> Vec<Vec<u8>> {
         k /= 2;
     }
 
-    // Remove trailing zero vectors from `result`
+    // Remove trailing zero vectors from 'result'
     while let Some(last) = result.last() {
         if last.iter().all(|&x| x == 0) {
             result.pop();
@@ -65,4 +63,41 @@ pub fn pow(a: &Vec<Vec<u8>>, mut k: u8) -> Vec<Vec<u8>> {
     }
 
     result
+}
+
+pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>) {
+    
+    let mut a = a.clone();
+    let mut degree_a = a.len() -1;
+    let degree_b = b.len() -1;
+
+    let mut q = vec![vec![0u8; 16]; degree_a - degree_b + 1];
+
+    while degree_a >= degree_b {
+        let degree_div = degree_a - degree_b;
+        let factor = gf_operations::gfdiv(a[degree_a].clone(), b[degree_b].clone());
+        q[degree_div] = factor.clone();
+
+        // Multiply every coefficient of 'b' with thr 'factor' 
+        let mut b_mul_fact = b.clone();
+        b_mul_fact = mul(&b_mul_fact, &vec![factor]);
+
+        // Padd 'b' at the beginning with 16 byte vectors with 0 until it has the lenght of 'a'
+        for _ in 0..(degree_div) {
+            b_mul_fact.insert(0, vec![0u8; 16]);
+        }
+
+        a = add(&a, &b_mul_fact); // "Reduce" 'a' polynomial with shifted b multiplied with the factor
+
+        // Remove trailing zero vectors from 'a'
+        while let Some(last) = a.last() {
+            if last.iter().all(|&x| x == 0) {
+                a.pop();
+                degree_a -= 1;
+            } else {
+                break;
+            }
+        }
+    }
+    (q, a)
 }
