@@ -36,7 +36,7 @@ pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     result
 }
 
-pub fn pow(a: &Vec<Vec<u8>>, mut k: u8) -> Vec<Vec<u8>> {
+pub fn pow(a: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
     let mut result = vec![vec![0; 16]; a.len()];
     result[0][0] = 0x80; // Initialise result with 1
 
@@ -100,4 +100,34 @@ pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>
         }
     }
     (q, a)
+}
+
+pub fn powmod(a: &Vec<Vec<u8>>, m: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
+    let mut result = vec![vec![0; 16]; a.len()];
+    result[0][0] = 0x80; // Initialise result with 1
+
+    let mut base = a.clone();
+
+    while k > 0 {
+        // If k is odd, multiply result by base
+        if k % 2 == 1 {
+            result = mul(&result, &base);
+            (_, result) = divmod(&result, &m);
+        }
+        // Square the base
+        base = mul(&base, &base);
+        // Halve k
+        k /= 2;
+    }
+
+    // Remove trailing zero vectors from 'result'
+    while let Some(last) = result.last() {
+        if last.iter().all(|&x| x == 0) {
+            result.pop();
+        } else {
+            break;
+        }
+    }
+
+    result
 }

@@ -139,7 +139,7 @@ fn main() {
                 }
             }
             "gfpoly_add" => {
-                if let Arguments::GfpolyTwoNum { A, B } = test_case.arguments {
+                if let Arguments::GfPolyTwoNum { A, B } = test_case.arguments {
                     let a = de_encode_base64::decode_vectors(A);
                     let b = de_encode_base64::decode_vectors(B);
                     
@@ -152,7 +152,7 @@ fn main() {
                 }
             }
             "gfpoly_mul" => {
-                if let Arguments::GfpolyTwoNum { A, B } = test_case.arguments {
+                if let Arguments::GfPolyTwoNum { A, B } = test_case.arguments {
                     let a = de_encode_base64::decode_vectors(A);
                     let b = de_encode_base64::decode_vectors(B);
                     
@@ -165,7 +165,7 @@ fn main() {
                 }
             }
             "gfpoly_pow" => {
-                if let Arguments::GfpolyPow { A, k } = test_case.arguments {
+                if let Arguments::GfPolyPow { A, k } = test_case.arguments {
                     let a = de_encode_base64::decode_vectors(A);
                     
                     let power = gfpoly_operations::pow(&a, k);
@@ -178,7 +178,7 @@ fn main() {
                 }
             }
             "gfpoly_divmod" => {
-                if let Arguments::GfpolyTwoNum { A, B } = test_case.arguments {
+                if let Arguments::GfPolyTwoNum { A, B } = test_case.arguments {
                     let a = de_encode_base64::decode_vectors(A);
                     let b = de_encode_base64::decode_vectors(B);
                     
@@ -187,6 +187,20 @@ fn main() {
                     json!({
                         "Q": de_encode_base64::encode_vectors(q),
                         "R": de_encode_base64::encode_vectors(r)
+                    })
+                } else {
+                    json!(null)
+                }
+            }
+            "gfpoly_powmod" => {
+                if let Arguments::GfPolyPowMod { A, M, k } = test_case.arguments {
+                    let a = de_encode_base64::decode_vectors(A);
+                    let m = de_encode_base64::decode_vectors(M);
+                    
+                    let power = gfpoly_operations::powmod(&a, &m, k);
+
+                    json!({
+                        "Z": de_encode_base64::encode_vectors(power)
                     })
                 } else {
                     json!(null)

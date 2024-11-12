@@ -3,28 +3,28 @@
       "254eaee7-05fd-4e0d-8292-9b658a852245": {
         "action": "padding_oracle",
             "arguments": {
-            "hostname": "127.0.0.1",
-            "port": 1337,
-            "iv": "",
-            "ciphertext": "AgEABwYFBAsKCQgPDwwNEQ=="
+                "hostname": "127.0.0.1",
+                "port": 1337,
+                "iv": "",
+                "ciphertext": "AgEABwYFBAsKCQgPDwwNEQ=="
             }
         },
         "354eaee7-05fd-4e0d-8292-9b658a852245": {
             "action": "padding_oracle",
             "arguments": {
-            "hostname": "127.0.0.1",
-            "port": 1337,
-            "iv": "AAAAAAAAAAAAAAAAAAAAAA==",
-            "ciphertext": "QENCRURHRklIS0pNTE9OUQAAAAAAAAAASUlJSUlJSUk="
+                "hostname": "127.0.0.1",
+                "port": 1337,
+                "iv": "AAAAAAAAAAAAAAAAAAAAAA==",
+                "ciphertext": "QENCRURHRklIS0pNTE9OUQAAAAAAAAAASUlJSUlJSUk="
             }
         },
         "454eaee7-05fd-4e0d-8292-9b658a852245": {
             "action": "padding_oracle",
             "arguments": {
-            "hostname": "127.0.0.1",
-            "port": 1337,
-            "iv": "",
-            "ciphertext": "SWdvaGomUGd7Zm8tLVpneTtFBR9PQXcbFx8QAAA7HgxIZzU7KCsfcHVmOixFWmF5aQxCH1pCahMPTTcmTlJobw=="
+                "hostname": "127.0.0.1",
+                "port": 1337,
+                "iv": "",
+                "ciphertext": "SWdvaGomUGd7Zm8tLVpneTtFBR9PQXcbFx8QAAA7HgxIZzU7KCsfcHVmOixFWmF5aQxCH1pCahMPTTcmTlJobw=="
             }
         }
     }

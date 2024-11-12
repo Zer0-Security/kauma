@@ -29,8 +29,9 @@ pub enum Arguments {
     GcmEncrypt { algorithm: String, nonce: String, key: String, plaintext: String, ad: String },
     GcmDecrypt { algorithm: String, nonce: String, key: String, ciphertext: String, ad: String, tag: String },
     PaddingOracle { hostname: String, port: u32, iv: String, ciphertext: String },
-    GfpolyTwoNum { A: Vec<String>, B: Vec<String> },
-    GfpolyPow { A: Vec<String>, k: u8 }
+    GfPolyTwoNum { A: Vec<String>, B: Vec<String> },
+    GfPolyPow { A: Vec<String>, k: u128 },
+    GfPolyPowMod { A: Vec<String>, M: Vec<String>, k: u128 },
 }
 
 pub fn parse_test_cases(path: &str) -> Result<HashMap<String, TestCase>, serde_json::Error> {
