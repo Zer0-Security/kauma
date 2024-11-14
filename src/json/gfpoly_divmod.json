@@ -13,6 +13,38 @@
                 "IQAAAAAAAAAAAAAAAAAAAA=="
                 ]
             }
+        },
+        "test_polynom_division_one_by_a": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "gAAAAAAAAAAAAAAAAAAAAA=="
+                ],
+                "B": [
+                    "JAAAAAAAAAAAAAAAAAAAAA=="
+                ]
+            }
+        },
+        "test_polynom_division_zero_by_one": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [],
+                "B": [
+                    "gAAAAAAAAAAAAAAAAAAAAA=="
+                ]
+            }
+        },
+        "test_polynom_division_with_zero_coeffs": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "gAAAAAAAAAAAAAAAAAAAAA==", 
+                    "AAAAAAAAAAAAAAAAAAAAAA=="
+                ],
+                "B": [
+                    "gAAAAAAAAAAAAAAAAAAAAA=="
+                ]
+            }
         }
     }
 }    

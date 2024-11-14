@@ -60,7 +60,7 @@ pub fn pow(a: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
 
 pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>) {
     
-    let mut a = a.clone();
+    let mut a = if a.is_empty() { vec![vec![0u8; 16]; 1] } else { a.clone() };
     let mut degree_a = a.len() -1;
     let degree_b = b.len() -1;
 
