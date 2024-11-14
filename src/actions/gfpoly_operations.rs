@@ -18,18 +18,7 @@ pub fn add(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
         }
     }
 
-    while let Some(last) = a.last() {
-        if last.iter().all(|&x| x == 0) {
-            a.pop();
-            if a.len() == 1 {
-                break;
-            }
-        } else {
-            break;
-        }
-    }
-
-    a
+    pop_last_zeros(a)
 }
 
 pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
@@ -46,18 +35,7 @@ pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
         }
     }
 
-    while let Some(last) = result.last() {
-        if last.iter().all(|&x| x == 0) {
-            result.pop();
-            if result.len() == 1 {
-                break;
-            }
-        } else {
-            break;
-        }
-    }
-
-    result
+    pop_last_zeros(result)
 }
 
 pub fn pow(a: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
@@ -77,19 +55,7 @@ pub fn pow(a: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
         k /= 2;
     }
 
-    // Remove trailing zero vectors from 'result'
-    while let Some(last) = result.last() {
-        if last.iter().all(|&x| x == 0) {
-            result.pop();
-            if result.len() == 1 {
-                break;
-            }
-        } else {
-            break;
-        }
-    }
-
-    result
+    pop_last_zeros(result)
 }
 
 pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>) {
@@ -115,21 +81,10 @@ pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>
         }
 
         a = add(&a, &b_mul_fact); // "Reduce" 'a' polynomial with shifted b multiplied with the factor
+        degree_a = a.len() -1; // New calcualtion of degree due to deleted zero-blocks in add
 
-        // Remove trailing zero vectors from 'a'
-        while let Some(last) = a.last() {
-            if last.iter().all(|&x| x == 0) {
-                a.pop();
-                degree_a -= 1;
-                if a.len() == 1 {
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
     }
-    (q, a)
+    (pop_last_zeros(q), pop_last_zeros(a))
 }
 
 pub fn powmod(a: &Vec<Vec<u8>>, m: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
@@ -144,23 +99,23 @@ pub fn powmod(a: &Vec<Vec<u8>>, m: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
             result = mul(&result, &base);
             (_, result) = divmod(&result, &m);
         }
-        // Square the base
-        base = mul(&base, &base);
+        // Square the base and use modular reduction
+        (_, base) = divmod(&mul(&base, &base), &m);
         // Halve k
         k /= 2;
     }
 
     // Remove trailing zero vectors from 'result'
-    while let Some(last) = result.last() {
-        if last.iter().all(|&x| x == 0) {
-            result.pop();
-            if result.len() == 1 {
-                break;
-            }
+    pop_last_zeros(result)
+}
+
+fn pop_last_zeros(mut input: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    while let Some(last) = input.last() {
+        if input.len() > 1 && last.iter().all(|&x| x == 0) {
+            input.pop();
         } else {
             break;
         }
     }
-
-    result
+    input
 }
