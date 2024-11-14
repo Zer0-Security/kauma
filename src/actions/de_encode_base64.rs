@@ -30,13 +30,6 @@ pub fn encode_vectors(input: Vec<Vec<u8>>) -> Vec<String> {
     base24_vect
 }
 
-// pub fn block_to_u128(semantic: &String, block: String) -> u128 {
-    
-//     let byte_vec = poly2byte::execute(&semantic, block2poly::execute(&semantic, block));
-    
-//     byte_to_u128(semantic, byte_vec)
-// }
-
 pub fn byte_to_u128(semantic: &String, byte_vec: Vec<u8>) -> u128 {
     let mut result: u128 = 0;
 
@@ -117,14 +110,6 @@ mod tests {
 
         assert_eq!(result, expected);
     }
-
-    // #[test]
-    // fn xex_block_to_u128() {
-
-    //     let result = block_to_u128(&"xex".to_string(), "ARIAAAAAAAAAAAAAAAAAgA==".to_string());
-
-    //     assert_eq!(result, 0x80000000000000000000000000001201);
-    // }
 
     #[test]
     fn xex_byte_to_u128() {

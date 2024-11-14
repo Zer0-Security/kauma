@@ -105,4 +105,16 @@ mod tests {
         let result = gfmul_f128(0x657890543286, 0x1);
         assert_eq!(result, 0x657890543286);
     }
+
+    #[test]
+    fn inverse_element_f_1() {
+        let e = vec![1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let f = 1;
+
+        let result = inverse_element_f(e, f);
+        
+        let expected_result = vec![128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        assert_eq!(result, expected_result);
+    }
 }

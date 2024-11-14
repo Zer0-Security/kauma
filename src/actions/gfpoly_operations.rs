@@ -57,6 +57,9 @@ pub fn pow(a: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
     while let Some(last) = result.last() {
         if last.iter().all(|&x| x == 0) {
             result.pop();
+            if result.len() == 1 {
+                break;
+            }
         } else {
             break;
         }
@@ -94,6 +97,9 @@ pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>
             if last.iter().all(|&x| x == 0) {
                 a.pop();
                 degree_a -= 1;
+                if a.len() == 1 {
+                    break;
+                }
             } else {
                 break;
             }
@@ -124,6 +130,9 @@ pub fn powmod(a: &Vec<Vec<u8>>, m: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
     while let Some(last) = result.last() {
         if last.iter().all(|&x| x == 0) {
             result.pop();
+            if result.len() == 1 {
+                break;
+            }
         } else {
             break;
         }
