@@ -64,7 +64,7 @@ pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>
     let mut degree_a = a.len() -1;
     let degree_b = b.len() -1;
 
-    let mut q = vec![vec![0u8; 16]; degree_a - degree_b + 1];
+    let mut q = vec![vec![0u8; 16]; if degree_a > degree_b { degree_a - degree_b + 1 } else { 1 }];
 
     while degree_a >= degree_b {
         let degree_div = degree_a - degree_b;

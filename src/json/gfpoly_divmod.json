@@ -45,6 +45,22 @@
                     "gAAAAAAAAAAAAAAAAAAAAA=="
                 ]
             }
+        },
+        "test_polynom_division_higher_degree": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "AQAAAAAAAAAAAAAAAAAAAA==",
+                    "AgAAAAAAAAAAAAAAAAAAAA=="
+                ],
+                "B": [
+                    "AQAAAAAAAAAAAAAAAAAAAA==",
+                    "AgAAAAAAAAAAAAAAAAAAAA==",
+                    "AwAAAAAAAAAAAAAAAAAAAA==",
+                    "AwAAAAAAAAAAAAAAAAAAAA==",
+                    "AwAAAAAAAAAAAAAAAAAAAA=="
+                ]
+            }
         }
     }
 }    
