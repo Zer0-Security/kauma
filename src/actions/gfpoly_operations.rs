@@ -82,7 +82,10 @@ pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>
 
         a = add(&a, &b_mul_fact); // "Reduce" 'a' polynomial with shifted b multiplied with the factor
         degree_a = a.len() -1; // New calcualtion of degree due to deleted zero-blocks in add
-
+        
+        if degree_div == 0 {
+            break;
+        }
     }
     (pop_last_zeros(q), pop_last_zeros(a))
 }
