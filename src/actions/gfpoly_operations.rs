@@ -17,6 +17,18 @@ pub fn add(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
             a[i][j] ^= b[i][j];
         }
     }
+
+    while let Some(last) = a.last() {
+        if last.iter().all(|&x| x == 0) {
+            a.pop();
+            if a.len() == 1 {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+
     a
 }
 
@@ -33,6 +45,18 @@ pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
             }
         }
     }
+
+    while let Some(last) = result.last() {
+        if last.iter().all(|&x| x == 0) {
+            result.pop();
+            if result.len() == 1 {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+
     result
 }
 
