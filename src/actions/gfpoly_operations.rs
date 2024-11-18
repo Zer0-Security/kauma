@@ -215,3 +215,32 @@ pub fn gcd(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     }
     make_monic(&a)
 }
+
+pub fn sff(mut f: Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
+    let mut factor_found: Vec<(Vec<Vec<u8>>, u128)> = Vec::new();
+    let mut c = gcd(&f, &diff(f.clone()));
+    (f, _) = divmod(&f, &c);
+
+    let mut one_vect = vec![vec![0u8; 16]];
+    one_vect[0][0] = 0x80; // Initialise result with 1
+
+    let mut e: u128 = 1;
+    while f != one_vect {
+        let y = gcd(&f, &c);
+        let mut factor: Vec<Vec<u8>> = Vec::new();
+        (factor, _) = divmod(&f, &y);
+        factor_found.push((factor, e));
+
+        f = y.clone();
+        (c, _) = divmod(&c, &y);
+        e += 1;
+    }
+    
+    if c != one_vect {
+        for (factor, e) in sff(sqrt(&f)) {
+            factor_found.push((factor, e * 2));
+        }
+    }
+
+    factor_found
+}

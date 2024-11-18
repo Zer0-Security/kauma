@@ -1,9 +1,9 @@
 mod parser;
 mod actions;
 
-use serde_json::json;
+use serde_json::{json, Value};
 use std::env;
-use parser:: TestCase;
+use parser::TestCase;
 use actions::*;
 
 fn main() {
@@ -193,6 +193,23 @@ fn main() {
                 let product = gfpoly_operations::gcd(&a, &b);
                 json!({
                     "G": de_encode_base64::encode_vectors(product)
+                })
+            }
+            TestCase::gfpoly_factor_sff { F } => {
+                let factors = de_encode_base64::decode_vectors(F);
+
+                let results: Vec<Value> = gfpoly_operations::sff(factors)
+                    .into_iter()
+                    .map(|(f, e)| {
+                        json!({
+                            "factor": de_encode_base64::encode_vectors(f),
+                            "exponent": e
+                        })
+                    })
+                    .collect();
+
+                json!({
+                    "factors": results
                 })
             }
         };
