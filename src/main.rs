@@ -177,6 +177,15 @@ fn main() {
                     "S": de_encode_base64::encode_vectors(q)
                 })
             }
+            TestCase::gfpoly_diff { F } => {
+                let mut f = de_encode_base64::decode_vectors(F);
+                
+                f = gfpoly_operations::diff(f);
+
+                json!({
+                    "F'": de_encode_base64::encode_vectors(f)
+                })
+            }
         };
 
         // Add the result to the responses map with the ID as the key

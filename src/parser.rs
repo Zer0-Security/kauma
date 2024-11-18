@@ -30,7 +30,8 @@ pub enum TestCase {
     gfpoly_powmod { A: Vec<String>, M: Vec<String>, k: u128 },
     gfpoly_sort { polys: Vec<Vec<String>> },
     gfpoly_make_monic { A: Vec<String> },
-    gfpoly_sqrt { Q: Vec<String> }
+    gfpoly_sqrt { Q: Vec<String> },
+    gfpoly_diff { F: Vec<String> }
 }
 
 

@@ -184,3 +184,12 @@ pub fn sqrt(a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     }
     result_vect
 }
+
+pub fn diff(mut a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    a.drain(0..1);
+
+    for i in (1..a.len()).step_by(2) {
+        a[i] = vec![0; 16];
+    }
+    pop_last_zeros(a)
+}
