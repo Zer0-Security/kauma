@@ -1,4 +1,4 @@
-use super::gf_operations;
+use super::gf_operations::{self, gfmul};
 
 pub fn add(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 
@@ -155,4 +155,30 @@ pub fn make_monic(a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     let divisor = a.last().map(|v| vec![v.clone()]).unwrap_or(vec![vec![0u8; 16]]);
     let result = divmod(&a, &divisor);
     result.0
+}
+
+pub fn sqrt(a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    let semantic = "gcm".to_string();
+    let mut result_vect: Vec<Vec<u8>> = Vec::new();
+
+    for (i, poly) in a.iter().enumerate() {
+        if i%2 == 0 {
+            let mut k: u128 = 2; 
+            k = k.pow(127);
+            let mut poly = poly.clone();
+            let mut result: Vec<u8> = vec![0x80];
+            while k > 0 {
+                // If k is odd, multiply result by base
+                if k % 2 == 1 {
+                    result = gfmul(&semantic, result, poly.clone());
+                }
+                // Square the base
+                poly = gfmul(&semantic, poly.clone(), poly.clone());
+                // Halve k
+                k /= 2;
+            } 
+            result_vect.push(result);
+        }
+    }
+    result_vect
 }

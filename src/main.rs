@@ -168,6 +168,15 @@ fn main() {
                     "A*": de_encode_base64::encode_vectors(a)
                 })
             }
+            TestCase::gfpoly_sqrt { Q } => {
+                let mut q = de_encode_base64::decode_vectors(Q);
+                
+                q = gfpoly_operations::sqrt(q);
+
+                json!({
+                    "S": de_encode_base64::encode_vectors(q)
+                })
+            }
         };
 
         // Add the result to the responses map with the ID as the key
