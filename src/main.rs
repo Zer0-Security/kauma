@@ -162,7 +162,7 @@ fn main() {
             TestCase::gfpoly_make_monic { A } => {
                 let mut a = de_encode_base64::decode_vectors(A);
                 
-                a = gfpoly_operations::make_monic(a);
+                a = gfpoly_operations::make_monic(&a);
 
                 json!({
                     "A*": de_encode_base64::encode_vectors(a)
@@ -171,7 +171,7 @@ fn main() {
             TestCase::gfpoly_sqrt { Q } => {
                 let mut q = de_encode_base64::decode_vectors(Q);
                 
-                q = gfpoly_operations::sqrt(q);
+                q = gfpoly_operations::sqrt(&q);
 
                 json!({
                     "S": de_encode_base64::encode_vectors(q)
@@ -184,6 +184,15 @@ fn main() {
 
                 json!({
                     "F'": de_encode_base64::encode_vectors(f)
+                })
+            }
+            TestCase::gfpoly_gcd { A, B } => {
+                let a = de_encode_base64::decode_vectors(A);
+                let b = de_encode_base64::decode_vectors(B);
+                
+                let product = gfpoly_operations::gcd(&a, &b);
+                json!({
+                    "G": de_encode_base64::encode_vectors(product)
                 })
             }
         };

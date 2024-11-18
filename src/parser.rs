@@ -31,7 +31,8 @@ pub enum TestCase {
     gfpoly_sort { polys: Vec<Vec<String>> },
     gfpoly_make_monic { A: Vec<String> },
     gfpoly_sqrt { Q: Vec<String> },
-    gfpoly_diff { F: Vec<String> }
+    gfpoly_diff { F: Vec<String> },
+    gfpoly_gcd { A: Vec<String>, B: Vec<String> }
 }
 
 

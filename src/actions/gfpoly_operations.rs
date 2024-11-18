@@ -1,3 +1,5 @@
+use std::mem;
+
 use super::gf_operations::{self, gfmul};
 
 pub fn add(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
@@ -153,13 +155,13 @@ pub fn sort(mut input: Vec<Vec<Vec<u8>>>) -> Vec<Vec<Vec<u8>>> {
     input
 }
 
-pub fn make_monic(a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+pub fn make_monic(a: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     let divisor = a.last().map(|v| vec![v.clone()]).unwrap_or(vec![vec![0u8; 16]]);
     let result = divmod(&a, &divisor);
     result.0
 }
 
-pub fn sqrt(a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+pub fn sqrt(a: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     let semantic = "gcm".to_string();
     let mut result_vect: Vec<Vec<u8>> = Vec::new();
 
@@ -186,10 +188,30 @@ pub fn sqrt(a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 }
 
 pub fn diff(mut a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    if a.len() == 1 {
+        return vec![vec![0u8; 16]];
+    }
     a.drain(0..1);
 
     for i in (1..a.len()).step_by(2) {
         a[i] = vec![0; 16];
     }
     pop_last_zeros(a)
+}
+
+pub fn gcd(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    let mut a = a.clone();
+    let mut b = b.clone();
+
+    // Swap a and b if b is larger than a
+    if b.len() > a.len(){
+        mem::swap(&mut a, &mut b);
+    }
+    let break_condition = vec![vec![0u8; 16]];
+    while b != break_condition  {
+        let remainder = divmod(&a, &b);
+        a = b;
+        b = remainder.1;
+    }
+    make_monic(&a)
 }
