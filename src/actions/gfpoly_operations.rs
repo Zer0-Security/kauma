@@ -136,7 +136,9 @@ pub fn sort(mut input: Vec<Vec<Vec<u8>>>) -> Vec<Vec<Vec<u8>>> {
                     match (a_iter.next(), b_iter.next()) {
                         (Some(a_inner), Some(b_inner)) => {
                             // Compare individual `u8` values
-                            match a_inner.iter().rev().cmp(b_inner.iter().rev()) {
+                            match a_inner.iter().rev().map(|&x| x.reverse_bits())
+                                .cmp(b_inner.iter().rev().map(|&x| x.reverse_bits())) 
+                                {
                                 std::cmp::Ordering::Equal => continue, // If equal -> check the next vectors
                                 ord => return ord, // Larger numbers take precedence
                             }
