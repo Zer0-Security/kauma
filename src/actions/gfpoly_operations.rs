@@ -122,3 +122,15 @@ fn pop_last_zeros(mut input: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     }
     input
 }
+
+pub fn sort(mut input: Vec<Vec<Vec<u8>>>) -> Vec<Vec<Vec<u8>>> {
+    input.sort_by(|a, b| {
+        // Compare by the number of elements in the vector (ascending order)
+        a.len().cmp(&b.len())
+            .then_with(|| {
+                // If lengths are equal, compare the vectors lexicographically (descending order)
+                a.iter().rev().cmp(b.iter().rev()).reverse()
+            })
+    });
+    input
+}

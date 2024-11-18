@@ -142,6 +142,23 @@ fn main() {
                     "Z": de_encode_base64::encode_vectors(power)
                 })
             }
+            TestCase::gfpoly_sort { polys } => {
+                let mut input: Vec<Vec<Vec<u8>>> = Vec::new();
+                let mut sorted: Vec<Vec<String>> = Vec::new();
+
+                for poly in polys {
+                    input.push(de_encode_base64::decode_vectors(poly));
+                }
+
+                input = gfpoly_operations::sort(input);
+
+                for poly in input {
+                    sorted.push(de_encode_base64::encode_vectors(poly));
+                }
+                json!({
+                    "sorted_polys": sorted
+                })
+            }
         };
 
         // Add the result to the responses map with the ID as the key
