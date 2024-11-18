@@ -1,0 +1,15 @@
+{
+    "testcases": {
+        "gfpoly_make_monic_1": {
+            "action": "gfpoly_make_monic",
+            "arguments": {
+                "A": [
+                "NeverGonnaGiveYouUpAAA==",
+                "NeverGonnaLetYouDownAA==",
+                "NeverGonnaRunAroundAAA==",
+                "AndDesertYouAAAAAAAAAA=="
+                ]
+            }
+        }   
+    }
+}    

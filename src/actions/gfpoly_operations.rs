@@ -125,12 +125,34 @@ fn pop_last_zeros(mut input: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 
 pub fn sort(mut input: Vec<Vec<Vec<u8>>>) -> Vec<Vec<Vec<u8>>> {
     input.sort_by(|a, b| {
-        // Compare by the number of elements in the vector (ascending order)
+        // Step 1: Compare by the number of elements in the outer vector (ascending)
         a.len().cmp(&b.len())
             .then_with(|| {
-                // If lengths are equal, compare the vectors lexicographically (descending order)
-                a.iter().rev().cmp(b.iter().rev()).reverse()
+                // Step 2: Compare lexicographically by the inner vectors (descending order)
+                let mut a_iter = a.iter().rev();
+                let mut b_iter = b.iter().rev();
+
+                loop {
+                    match (a_iter.next(), b_iter.next()) {
+                        (Some(a_inner), Some(b_inner)) => {
+                            // Compare individual `u8` values
+                            match a_inner.iter().rev().cmp(b_inner.iter().rev()) {
+                                std::cmp::Ordering::Equal => continue, // If equal -> check the next vectors
+                                ord => return ord, // Larger numbers take precedence
+                            }
+                        }
+                        (None, None) => return std::cmp::Ordering::Equal, // Both have same inner vectors
+                        (None, _) => return std::cmp::Ordering::Less,    // `a` has fewer inner vectors
+                        (_, None) => return std::cmp::Ordering::Greater, // `b` has fewer inner vectors
+                    }
+                }
             })
     });
     input
+}
+
+pub fn make_monic(a: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    let divisor = a.last().map(|v| vec![v.clone()]).unwrap_or(vec![vec![0u8; 16]]);
+    let result = divmod(&a, &divisor);
+    result.0
 }

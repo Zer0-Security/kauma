@@ -159,6 +159,15 @@ fn main() {
                     "sorted_polys": sorted
                 })
             }
+            TestCase::gfpoly_make_monic { A } => {
+                let mut a = de_encode_base64::decode_vectors(A);
+                
+                a = gfpoly_operations::make_monic(a);
+
+                json!({
+                    "A*": de_encode_base64::encode_vectors(a)
+                })
+            }
         };
 
         // Add the result to the responses map with the ID as the key
