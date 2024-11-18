@@ -198,12 +198,29 @@ fn main() {
             TestCase::gfpoly_factor_sff { F } => {
                 let factors = de_encode_base64::decode_vectors(F);
 
-                let results: Vec<Value> = gfpoly_operations::sff(factors)
+                let results: Vec<Value> = gfpoly_operations::sff(&factors)
                     .into_iter()
                     .map(|(f, e)| {
                         json!({
                             "factor": de_encode_base64::encode_vectors(f),
                             "exponent": e
+                        })
+                    })
+                    .collect();
+
+                json!({
+                    "factors": results
+                })
+            }
+            TestCase::gfpoly_factor_ddf { F } => {
+                let factors = de_encode_base64::decode_vectors(F);
+
+                let results: Vec<Value> = gfpoly_operations::ddf(&factors)
+                    .into_iter()
+                    .map(|(f, d)| {
+                        json!({
+                            "factor": de_encode_base64::encode_vectors(f),
+                            "degree": d
                         })
                     })
                     .collect();

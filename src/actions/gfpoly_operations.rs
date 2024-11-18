@@ -216,19 +216,19 @@ pub fn gcd(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     make_monic(&a)
 }
 
-pub fn sff(mut f: Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
+pub fn sff(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
+    let mut f = f.clone();
     let mut factor_found: Vec<(Vec<Vec<u8>>, u128)> = Vec::new();
     let mut c = gcd(&f, &diff(f.clone()));
     (f, _) = divmod(&f, &c);
 
     let mut one_vect = vec![vec![0u8; 16]];
-    one_vect[0][0] = 0x80; // Initialise result with 1
+    one_vect[0][0] = 0x80; // The constant polynomial 1
 
     let mut e: u128 = 1;
     while f != one_vect {
         let y = gcd(&f, &c);
-        let mut factor: Vec<Vec<u8>> = Vec::new();
-        (factor, _) = divmod(&f, &y);
+        let (factor, _) = divmod(&f, &y);
         factor_found.push((factor, e));
 
         f = y.clone();
@@ -237,10 +237,50 @@ pub fn sff(mut f: Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     }
     
     if c != one_vect {
-        for (factor, e) in sff(sqrt(&f)) {
+        for (factor, e) in sff(&sqrt(&f)) {
             factor_found.push((factor, e * 2));
         }
     }
 
     factor_found
+}
+
+pub fn ddf(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
+    let mut z: Vec<(Vec<Vec<u8>>, u128)> = Vec::new();
+    let mut d:u32 = 1;
+
+    let mut x = vec![vec![0u8; 16]; 2];
+    x[1][0] = 0x80; // x is the polynomial x
+
+    let mut one_vect = vec![vec![0u8; 16]];
+    one_vect[0][0] = 0x80; // The constant polynomial 1
+
+    let mut fstar = f.clone();
+
+    while fstar.len() as u32 -1 >= 2 * d {
+        let mut h = x.clone();
+        // Compute h = x^{2^{128d}} mod fstar
+        for _ in 0..(128 * d) {
+            h = mul(&h, &h);
+            (_, h) = divmod(&h, &fstar);
+        }
+
+        h = add(&h, &x);
+
+        let g = gcd(&h, &fstar);
+
+        if g != one_vect {
+            z.push((g.clone(), d as u128));
+            (fstar, _) = divmod(&fstar, &g);
+        }
+
+        d += 1;
+    }
+
+    if fstar != one_vect {
+        z.push((fstar.clone(), fstar.len() as u128 -1 ));
+    } else if z.len() == 0 {
+        z.push((f.clone(), 1 ));
+    }
+    z
 }

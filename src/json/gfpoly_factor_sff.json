@@ -1,6 +1,6 @@
 {
     "testcases": {
-        "gfpoly_mul_1": {
+        "gfpoly_sff_1": {
             "action": "gfpoly_factor_sff",
             "arguments": {
                 "F": [

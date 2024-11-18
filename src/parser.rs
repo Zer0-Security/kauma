@@ -33,7 +33,8 @@ pub enum TestCase {
     gfpoly_sqrt { Q: Vec<String> },
     gfpoly_diff { F: Vec<String> },
     gfpoly_gcd { A: Vec<String>, B: Vec<String> },
-    gfpoly_factor_sff { F: Vec<String> }
+    gfpoly_factor_sff { F: Vec<String> },
+    gfpoly_factor_ddf { F: Vec<String> }
 }
 
 
