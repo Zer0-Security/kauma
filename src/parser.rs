@@ -34,7 +34,8 @@ pub enum TestCase {
     gfpoly_diff { F: Vec<String> },
     gfpoly_gcd { A: Vec<String>, B: Vec<String> },
     gfpoly_factor_sff { F: Vec<String> },
-    gfpoly_factor_ddf { F: Vec<String> }
+    gfpoly_factor_ddf { F: Vec<String> },
+    gfpoly_factor_edf { F: Vec<String>, d: u128 }
 }
 
 

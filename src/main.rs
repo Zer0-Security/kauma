@@ -229,6 +229,20 @@ fn main() {
                     "factors": results
                 })
             }
+            TestCase::gfpoly_factor_edf { F, d } => {
+                let f = de_encode_base64::decode_vectors(F);
+                
+                let result = gfpoly_operations::edf(&f, d as usize);
+
+                let encoded_factors: Vec<Vec<String>> = result
+                    .iter()
+                    .map(|factor| de_encode_base64::encode_vectors(factor.clone()))
+                    .collect();
+
+                json!({
+                    "factores": encoded_factors
+                })
+            }
         };
 
         // Add the result to the responses map with the ID as the key

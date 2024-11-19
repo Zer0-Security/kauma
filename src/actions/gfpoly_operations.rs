@@ -1,4 +1,7 @@
 use std::mem;
+use num::BigUint;
+use num::{One, Zero};
+use rand::Rng;
 
 use super::gf_operations::{self, gfmul};
 
@@ -219,13 +222,16 @@ pub fn gcd(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 pub fn sff(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     let mut f = f.clone();
     let mut factor_found: Vec<(Vec<Vec<u8>>, u128)> = Vec::new();
+
+    // Compute the derivative of 'f' and calculate GCD with 'f' to find repeated factors
     let mut c = gcd(&f, &diff(f.clone()));
     (f, _) = divmod(&f, &c);
 
     let mut one_vect = vec![vec![0u8; 16]];
-    one_vect[0][0] = 0x80; // The constant polynomial 1
+    one_vect[0][0] = 0x80; // The constant polynomial '1'
 
     let mut e: u128 = 1;
+
     while f != one_vect {
         let y = gcd(&f, &c);
         let (factor, _) = divmod(&f, &y);
@@ -237,7 +243,7 @@ pub fn sff(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     }
     
     if c != one_vect {
-        for (factor, e) in sff(&sqrt(&f)) {
+        for (factor, e) in sff(&sqrt(&c)) {
             factor_found.push((factor, e * 2));
         }
     }
@@ -247,22 +253,25 @@ pub fn sff(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
 
 pub fn ddf(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     let mut z: Vec<(Vec<Vec<u8>>, u128)> = Vec::new();
-    let mut d:u32 = 1;
+    let mut d: u32 = 1;
 
+    // Represent the polynomial 'x' in your format (monomial of degree 1)
     let mut x = vec![vec![0u8; 16]; 2];
-    x[1][0] = 0x80; // x is the polynomial x
+    x[1][0] = 0x80;
 
+    // The constant polynomial '1'
     let mut one_vect = vec![vec![0u8; 16]];
-    one_vect[0][0] = 0x80; // The constant polynomial 1
+    one_vect[0][0] = 0x80; 
 
     let mut fstar = f.clone();
 
-    while fstar.len() as u32 -1 >= 2 * d {
+    while (fstar.len() as u32 - 1) >= 2 * d {
         let mut h = x.clone();
-        // Compute h = x^{2^{128d}} mod fstar
+
+        // Compute h = x^{2^{128d}} mod fstar by performing 128*d squarings
         for _ in 0..(128 * d) {
-            h = mul(&h, &h);
-            (_, h) = divmod(&h, &fstar);
+            h = mul(&h, &h); // Square 'h'
+            (_, h) = divmod(&h, &fstar); // Reduce modulo 'fstar' to keep degrees manageable
         }
 
         h = add(&h, &x);
@@ -278,9 +287,95 @@ pub fn ddf(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     }
 
     if fstar != one_vect {
-        z.push((fstar.clone(), fstar.len() as u128 -1 ));
+        z.push((fstar.clone(), (fstar.len() as u128 - 1)));
     } else if z.len() == 0 {
         z.push((f.clone(), 1 ));
     }
-    z
+    z 
 }
+
+
+// Modular exponentiation for polynomials with BigUint exponent
+pub fn powmod_bigint(base: &Vec<Vec<u8>>, exponent: &BigUint, modulus: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+
+    let mut result = vec![vec![0u8; 16]];
+    result[0][0] = 0x80;
+
+    let mut base = base.clone();
+    let mut exponent = exponent.clone();
+
+    // Perform exponentiation using the square-and-multiply algorithm
+    while !exponent.is_zero() {
+        // If the least significant bit of the exponent is '1'
+        if &exponent & BigUint::one() == BigUint::one() {
+            result = mul(&result, &base);
+            (_, result) = divmod(&result, modulus);
+        }
+        // Devide by 2 --> Shift the exponent right by 1 bit
+        exponent >>= 1;
+        if !exponent.is_zero() {
+
+            base = mul(&base, &base);   // Square the base polynomial
+            (_, base) = divmod(&base, modulus); // Reduce modulo 'modulus'
+        }
+    }
+    result
+}
+
+pub fn edf(f: &Vec<Vec<u8>>, d: usize) -> Vec<Vec<Vec<u8>>> {
+    
+    let q: BigUint = BigUint::from(2u32).pow(128); // Compute q = 2^128
+    
+    // Calculate the expected number of factors of degree 'd'
+    let n = f.len() / d;
+    
+    // Initialize 'z' with the polynomial 'f'; this vector will store factors
+    let mut z = vec![f.clone()];
+    
+    // The polynomial 1
+    let mut one_vect = vec![vec![0u8; 16]];
+    one_vect[0][0] = 0x80;
+    
+    // Compute the exponent: (q^d - 1) / 3
+    let exponent = (&q.pow(d as u32) - BigUint::one()) / BigUint::from(3u32);
+    
+    // Loop until we have 'n' factors in 'z'
+    while z.len() < n {
+        // Generate a random polynomial 'h' of degree less than deg(f)
+        let deg_f = f.len() - 1; // Degree of 'f'
+        let deg_h = rand::thread_rng().gen_range(1..deg_f); // Random degree between 1 and deg_f - 1
+        let mut h = vec![vec![0u8; 16]; deg_h + 1]; // Initialize 'h' with zero coefficients
+        
+        // Assign random coefficients to 'h'
+        for coeff in &mut h {
+            for byte in coeff.iter_mut() {
+                *byte = rand::random();
+            }
+        }
+        
+        // Compute g = (h^{(q^d - 1)/3} - 1) mod f
+        let mut g = powmod_bigint(&h, &exponent, f); // Perform modular exponentiation
+        g = add(&g, &one_vect); // Subtract 1 from 'g' (since in GF(2^n), subtraction is addition)
+        
+        let mut new_z = Vec::new(); // Temporary vector to store updated factors
+        
+        // Attempt to factor each polynomial 'u' in 'z'
+        for u in &z {
+            if u.len() - 1 > d {
+                let j = gcd(u, &g); 
+                if j != one_vect && j != *u {
+                    let (quotient, _) = divmod(u, &j); 
+                    new_z.push(j);
+                    new_z.push(quotient);
+                } else {
+                    new_z.push(u.clone());
+                }
+            } else {
+                new_z.push(u.clone());
+            }
+        }
+        z = new_z; // Update 'z' with the new set of factors
+    }
+    z // Return the list of factors of degree 'd'
+}
+
