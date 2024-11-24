@@ -22,7 +22,6 @@ pub fn add(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
             a[i][j] ^= b[i][j];
         }
     }
-
     pop_last_zeros(a)
 }
 
@@ -39,7 +38,6 @@ pub fn mul(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
             }
         }
     }
-
     pop_last_zeros(result)
 }
 
@@ -59,7 +57,6 @@ pub fn pow(a: &Vec<Vec<u8>>, mut k: u128) -> Vec<Vec<u8>> {
         // Halve k
         k /= 2;
     }
-
     pop_last_zeros(result)
 }
 
@@ -70,7 +67,6 @@ pub fn divmod(a: &Vec<Vec<u8>>, b: &Vec<Vec<u8>>) -> (Vec<Vec<u8>>, Vec<Vec<u8>>
     let degree_b = b.len() -1;
 
     let mut q = vec![vec![0u8; 16]; if degree_a > degree_b { degree_a - degree_b + 1 } else { 1 }];
-
     while degree_a >= degree_b {
         let degree_div = degree_a - degree_b;
         let factor = gf_operations::gfdiv(a[degree_a].clone(), b[degree_b].clone());
@@ -149,8 +145,8 @@ pub fn sort(mut input: Vec<Vec<Vec<u8>>>) -> Vec<Vec<Vec<u8>>> {
                             }
                         }
                         (None, None) => return std::cmp::Ordering::Equal, // Both have same inner vectors
-                        (None, _) => return std::cmp::Ordering::Less,    // `a` has fewer inner vectors
-                        (_, None) => return std::cmp::Ordering::Greater, // `b` has fewer inner vectors
+                        (None, _) => return std::cmp::Ordering::Less,     // `a` has fewer inner vectors
+                        (_, None) => return std::cmp::Ordering::Greater,  // `b` has fewer inner vectors
                     }
                 }
             })
@@ -247,7 +243,6 @@ pub fn sff(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
             factor_found.push((factor, e * 2));
         }
     }
-
     factor_found
 }
 
@@ -294,7 +289,6 @@ pub fn ddf(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     z 
 }
 
-
 // Modular exponentiation for polynomials with BigUint exponent
 pub fn powmod_bigint(base: &Vec<Vec<u8>>, exponent: &BigUint, modulus: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 
@@ -322,49 +316,51 @@ pub fn powmod_bigint(base: &Vec<Vec<u8>>, exponent: &BigUint, modulus: &Vec<Vec<
     result
 }
 
+fn random_poly(max_degree: usize) -> Vec<Vec<u8>> {
+    let deg_h = rand::thread_rng().gen_range(1..=max_degree);
+    let mut h = vec![vec![0u8; 16]; deg_h + 1];
+    for coeff in &mut h {
+        for byte in coeff.iter_mut() {
+            *byte = rand::random();
+        }
+    }
+    h
+}
+
 pub fn edf(f: &Vec<Vec<u8>>, d: usize) -> Vec<Vec<Vec<u8>>> {
-    
     let q: BigUint = BigUint::from(2u32).pow(128); // Compute q = 2^128
-    
+
     // Calculate the expected number of factors of degree 'd'
-    let n = f.len() / d;
-    
+    let n = (f.len() - 1) / d; // Ensure integer division
+
     // Initialize 'z' with the polynomial 'f'; this vector will store factors
     let mut z = vec![f.clone()];
-    
-    // The polynomial 1
+
+    // The polynomial 1 (represented appropriately in your finite field)
     let mut one_vect = vec![vec![0u8; 16]];
-    one_vect[0][0] = 0x80;
-    
+    one_vect[0][0] = 0x80; // Adjust based on your representation
+
     // Compute the exponent: (q^d - 1) / 3
     let exponent = (&q.pow(d as u32) - BigUint::one()) / BigUint::from(3u32);
-    
+
     // Loop until we have 'n' factors in 'z'
     while z.len() < n {
         // Generate a random polynomial 'h' of degree less than deg(f)
-        let deg_f = f.len() - 1; // Degree of 'f'
-        let deg_h = rand::thread_rng().gen_range(1..deg_f); // Random degree between 1 and deg_f - 1
-        let mut h = vec![vec![0u8; 16]; deg_h + 1]; // Initialize 'h' with zero coefficients
-        
-        // Assign random coefficients to 'h'
-        for coeff in &mut h {
-            for byte in coeff.iter_mut() {
-                *byte = rand::random();
-            }
-        }
-        
+        let deg_f = f.len() -1; // Degree of 'f'
+        let h = random_poly(deg_f - 1); // Random polynomial of degree < deg(f)
+
         // Compute g = (h^{(q^d - 1)/3} - 1) mod f
-        let mut g = powmod_bigint(&h, &exponent, f); // Perform modular exponentiation
-        g = add(&g, &one_vect); // Subtract 1 from 'g' (since in GF(2^n), subtraction is addition)
-        
+        let mut g = powmod_bigint(&h, &exponent, f); // Modular exponentiation
+        g = add(&g, &one_vect); // Subtract 1 from 'g' (addition in GF(2^n))
+
         let mut new_z = Vec::new(); // Temporary vector to store updated factors
-        
+
         // Attempt to factor each polynomial 'u' in 'z'
         for u in &z {
-            if u.len() - 1 > d {
-                let j = gcd(u, &g); 
+            if u.len() -1  > d {
+                let j = gcd(u, &g);
                 if j != one_vect && j != *u {
-                    let (quotient, _) = divmod(u, &j); 
+                    let (quotient, _) = divmod(u, &j);
                     new_z.push(j);
                     new_z.push(quotient);
                 } else {
@@ -376,6 +372,5 @@ pub fn edf(f: &Vec<Vec<u8>>, d: usize) -> Vec<Vec<Vec<u8>>> {
         }
         z = new_z; // Update 'z' with the new set of factors
     }
-    z // Return the list of factors of degree 'd'
+    sort(z) // Sort and return the list of factors of degree 'd'
 }
-

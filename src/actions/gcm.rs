@@ -75,7 +75,7 @@ fn de_encrypt(algorithm: String, mode: &String ,plaintext: Vec<u8>, nonce: Vec<u
     ciphertext
 }
 
-fn ghash(ciphertext: Vec<u8>, auth_key: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>) {
+pub fn ghash(ciphertext: Vec<u8>, auth_key: Vec<u8>, ad: Vec<u8>) -> (Vec<u8>, Vec<u8>) {
 
     // Initialize both counters and concat them to get the L-block
     let counter_ad = de_encode_base64::u64_to_byte(&"xex".to_string(), (ad.len() * 8) as u64);

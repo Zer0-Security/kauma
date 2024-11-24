@@ -53,7 +53,6 @@ fn gfmul_f128(mut a: u128, mut b: u128) -> u128 {
 }
 
 pub fn gfdiv(a: Vec<u8>, b: Vec<u8>) -> Vec<u8> {
-
     let b_inverse = inverse_element_f(b, 128);
     let a = de_encode_base64::byte_to_u128(&"gcm".to_string(), a);
     let b_inverse = de_encode_base64::byte_to_u128(&"gcm".to_string(), b_inverse);
@@ -70,7 +69,6 @@ fn inverse_element_f(e: Vec<u8>, f: u32) -> Vec<u8> {
 
     let exponent: u128 = 2;
     let mut exponent: u128 = exponent.pow(f) - 2; // 2^f - 2
-
     while exponent > 0 {
         // If k is odd, multiply result by base
         if exponent % 2 == 1 {
@@ -82,6 +80,17 @@ fn inverse_element_f(e: Vec<u8>, f: u32) -> Vec<u8> {
         exponent /= 2; // Halve k
     }
     de_encode_base64::u128_to_byte(&"gcm".to_string(), result)
+}
+
+pub fn add_vec(vec1: &Vec<u8>, vec2: &Vec<u8>) -> Vec<u8> {
+    let max_len = std::cmp::max(vec1.len(), vec2.len());
+    (0..max_len)
+        .map(|i| {
+            let a = vec1.get(i).cloned().unwrap_or(0); // Use 0 if index out of bounds
+            let b = vec2.get(i).cloned().unwrap_or(0);
+            a ^ b
+        })
+        .collect()
 }
 
 #[cfg(test)]

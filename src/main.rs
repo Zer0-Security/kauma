@@ -240,7 +240,42 @@ fn main() {
                     .collect();
 
                 json!({
-                    "factores": encoded_factors
+                    "factors": encoded_factors
+                })
+            }
+            TestCase::gcm_crack { nonce, m1, m2, m3, forgery } => {
+                
+                let nonce = de_encode_base64::decode(nonce).unwrap();
+
+                // Decode m1 fields and create tuple
+                let m1_ciphertext = de_encode_base64::decode(m1.ciphertext).unwrap();
+                let m1_associated_data = de_encode_base64::decode(m1.associated_data).unwrap();
+                let m1_tag = de_encode_base64::decode(m1.tag).unwrap();
+                let m1 = (m1_ciphertext, m1_associated_data, m1_tag);
+        
+                // Decode m2 fields and create tuple
+                let m2_ciphertext = de_encode_base64::decode(m2.ciphertext).unwrap();
+                let m2_associated_data = de_encode_base64::decode(m2.associated_data).unwrap();
+                let m2_tag = de_encode_base64::decode(m2.tag).unwrap();
+                let m2 = (m2_ciphertext, m2_associated_data, m2_tag);
+        
+                // Decode m3 fields and create tuple
+                let m3_ciphertext = de_encode_base64::decode(m3.ciphertext).unwrap();
+                let m3_associated_data = de_encode_base64::decode(m3.associated_data).unwrap();
+                let m3_tag = de_encode_base64::decode(m3.tag).unwrap();
+                let m3 = (m3_ciphertext, m3_associated_data, m3_tag);
+        
+                // Decode forgery fields and create tuple
+                let forgery_ciphertext = de_encode_base64::decode(forgery.ciphertext).unwrap();
+                let forgery_associated_data = de_encode_base64::decode(forgery.associated_data).unwrap();
+                let forgery = (forgery_ciphertext, forgery_associated_data);
+
+                let (tag, h, mask) = gcm_crack::execute(nonce, m1, m2, m3, forgery);
+
+                json!({
+                    "tag": de_encode_base64::encode(tag),
+                    "H": de_encode_base64::encode(h),
+                    "Mask": de_encode_base64::encode(mask)
                 })
             }
         };

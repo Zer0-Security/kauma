@@ -1,0 +1,54 @@
+{
+    "testcases": {
+        "gcm_crack_1": {
+            "action": "gcm_crack",
+            "arguments": {
+                "nonce": "4gF+BtR3ku/PUQci",
+                "m1": {
+                    "ciphertext": "CGOkZDnJEt24aVV8mqQq+P4pouVDWhAYj0SN5MDAgg==",
+                    "associated_data": "TmFjaHJpY2h0IDE=",
+                    "tag": "GC9neV3aZLnmznTIWqCC4A=="
+                },
+                "m2": {
+                    "ciphertext": "FnWyLSTfRrO8Y1MuhLIs6A==",
+                    "associated_data": "",
+                    "tag": "gb2ph1vzwU85/FsUg51t3Q=="
+                },
+                "m3": {
+                    "ciphertext": "CGOkZDnJEt25aV58iaMt6O8+8chKVh0Eg1XFxA==",
+                    "associated_data": "TmFjaHJpY2h0IDM=",
+                    "tag": "+/aDjsAzTseDLuM4jt5Q6Q=="
+                },
+                "forgery": {
+                    "ciphertext": "AXe/ZQ==",
+                    "associated_data": ""
+                }
+            }
+        },
+        "gcm_crack_2": {
+            "action": "gcm_crack",
+            "arguments": {
+                "nonce": "4gF+BtR3ku/PUQci",
+                "m1": {
+                    "ciphertext": "ET3RmvH/Hbuxba63MfPMv3QnwJ64F8FnJu7dWHvzDw==",
+                    "associated_data": "TmFjaHJpY2h0IDE=",
+                    "tag": "yMhQ5K3VNzwAo8lXW2auAg=="
+                },
+                "m2": {
+                    "ciphertext": "DyvH0+zpSdW1Z6jlL+XKrw==",
+                    "associated_data": "",
+                    "tag": "0j5yCkInrFfhaN9DYg8UuQ=="
+                },
+                "m3": {
+                    "ciphertext": "ET3RmvH/HbuwbaW3IvTLr2Uwk7OxG8x7Kv+VeA==",
+                    "associated_data": "TmFjaHJpY2h0IDM=",
+                    "tag": "GksHySXgxj+XRZx6nzsEHA=="
+                },
+                "forgery": {
+                    "ciphertext": "GCnKmw==",
+                    "associated_data": ""
+                } 
+            }           
+        }
+    }
+}    

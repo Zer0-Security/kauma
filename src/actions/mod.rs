@@ -9,3 +9,4 @@ pub mod xex;
 pub mod gcm;
 pub mod padding_oracle;
 pub mod gfpoly_operations;
+pub mod gcm_crack;

@@ -35,9 +35,22 @@ pub enum TestCase {
     gfpoly_gcd { A: Vec<String>, B: Vec<String> },
     gfpoly_factor_sff { F: Vec<String> },
     gfpoly_factor_ddf { F: Vec<String> },
-    gfpoly_factor_edf { F: Vec<String>, d: u128 }
+    gfpoly_factor_edf { F: Vec<String>, d: u128 },
+    gcm_crack { nonce: String, m1: Message, m2: Message, m3: Message, forgery: Forgery}
 }
 
+#[derive(Deserialize, Debug)]
+pub struct Message{
+    pub ciphertext: String,
+    pub associated_data: String,
+    pub tag: String
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Forgery{
+    pub ciphertext: String,
+    pub associated_data: String,
+}
 
 pub fn parse_test_cases(path: &str) -> Result<HashMap<String, TestCase>, serde_json::Error> {
     // Read the JSON file from the path
