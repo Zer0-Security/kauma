@@ -124,35 +124,40 @@ fn pop_last_zeros(mut input: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     input
 }
 
-pub fn sort(mut input: Vec<Vec<Vec<u8>>>) -> Vec<Vec<Vec<u8>>> {
-    input.sort_by(|a, b| {
-        // Step 1: Compare by the number of elements in the outer vector (ascending)
-        a.len().cmp(&b.len())
-            .then_with(|| {
-                // Step 2: Compare lexicographically by the inner vectors (descending order)
-                let mut a_iter = a.iter().rev();
-                let mut b_iter = b.iter().rev();
+fn comparator(a_vec: &Vec<Vec<u8>>, b_vec: &Vec<Vec<u8>>) -> std::cmp::Ordering {
+    a_vec.len().cmp(&b_vec.len())
+        .then_with(|| {
+            let mut a_iter = a_vec.iter().rev();
+            let mut b_iter = b_vec.iter().rev();
 
-                loop {
-                    match (a_iter.next(), b_iter.next()) {
-                        (Some(a_inner), Some(b_inner)) => {
-                            // Compare individual `u8` values
-                            match a_inner.iter().rev().map(|&x| x.reverse_bits())
-                                .cmp(b_inner.iter().rev().map(|&x| x.reverse_bits())) 
-                                {
-                                std::cmp::Ordering::Equal => continue, // If equal -> check the next vectors
-                                ord => return ord, // Larger numbers take precedence
-                            }
+            loop {
+                match (a_iter.next(), b_iter.next()) {
+                    (Some(a_inner), Some(b_inner)) => {
+                        match a_inner.iter().rev().map(|&x| x.reverse_bits())
+                            .cmp(b_inner.iter().rev().map(|&x| x.reverse_bits()))
+                        {
+                            std::cmp::Ordering::Equal => continue,
+                            ord => return ord,
                         }
-                        (None, None) => return std::cmp::Ordering::Equal, // Both have same inner vectors
-                        (None, _) => return std::cmp::Ordering::Less,     // `a` has fewer inner vectors
-                        (_, None) => return std::cmp::Ordering::Greater,  // `b` has fewer inner vectors
                     }
+                    (None, None) => return std::cmp::Ordering::Equal,
+                    (None, _) => return std::cmp::Ordering::Less,
+                    (_, None) => return std::cmp::Ordering::Greater,
                 }
-            })
-    });
+            }
+        })
+}
+
+pub fn sort(mut input: Vec<Vec<Vec<u8>>>) -> Vec<Vec<Vec<u8>>> {
+    input.sort_by(|a, b| comparator(a, b));
     input
 }
+
+pub fn sort_tuples(mut input: Vec<(Vec<Vec<u8>>, u128)>) -> Vec<(Vec<Vec<u8>>, u128)> {
+    input.sort_by(|a, b| comparator(&a.0, &b.0));
+    input
+}
+
 
 pub fn make_monic(a: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
     let divisor = a.last().map(|v| vec![v.clone()]).unwrap_or(vec![vec![0u8; 16]]);
@@ -243,7 +248,7 @@ pub fn sff(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
             factor_found.push((factor, e * 2));
         }
     }
-    factor_found
+    sort_tuples(factor_found)
 }
 
 pub fn ddf(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
@@ -286,7 +291,7 @@ pub fn ddf(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     } else if z.len() == 0 {
         z.push((f.clone(), 1 ));
     }
-    z 
+    sort_tuples(z) 
 }
 
 // Modular exponentiation for polynomials with BigUint exponent
