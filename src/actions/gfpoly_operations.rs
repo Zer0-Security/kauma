@@ -335,28 +335,24 @@ fn random_poly(max_degree: usize) -> Vec<Vec<u8>> {
 pub fn edf(f: &Vec<Vec<u8>>, d: usize) -> Vec<Vec<Vec<u8>>> {
     let q: BigUint = BigUint::from(2u32).pow(128); // Compute q = 2^128
 
-    // Calculate the expected number of factors of degree 'd'
     let n = (f.len() - 1) / d; // Ensure integer division
-
-    // Initialize 'z' with the polynomial 'f'; this vector will store factors
     let mut z = vec![f.clone()];
 
-    // The polynomial 1 (represented appropriately in your finite field)
+    // The polynomial 1
     let mut one_vect = vec![vec![0u8; 16]];
-    one_vect[0][0] = 0x80; // Adjust based on your representation
+    one_vect[0][0] = 0x80;
 
     // Compute the exponent: (q^d - 1) / 3
     let exponent = (&q.pow(d as u32) - BigUint::one()) / BigUint::from(3u32);
 
-    // Loop until we have 'n' factors in 'z'
     while z.len() < n {
         // Generate a random polynomial 'h' of degree less than deg(f)
-        let deg_f = f.len() -1; // Degree of 'f'
-        let h = random_poly(deg_f - 1); // Random polynomial of degree < deg(f)
+        let deg_f = f.len() -1;
+        let h = random_poly(deg_f - 1);
 
-        // Compute g = (h^{(q^d - 1)/3} - 1) mod f
-        let mut g = powmod_bigint(&h, &exponent, f); // Modular exponentiation
-        g = add(&g, &one_vect); // Subtract 1 from 'g' (addition in GF(2^n))
+        // Compute g = (h^((q^d - 1)/3) - 1) mod f
+        let mut g = powmod_bigint(&h, &exponent, f);
+        g = add(&g, &one_vect);
 
         let mut new_z = Vec::new(); // Temporary vector to store updated factors
 
