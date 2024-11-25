@@ -235,8 +235,10 @@ pub fn sff(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
 
     while f != one_vect {
         let y = gcd(&f, &c);
-        let (factor, _) = divmod(&f, &y);
-        factor_found.push((factor, e));
+        if f != y {
+            let (factor, _) = divmod(&f, &y);
+            factor_found.push((factor, e));
+        }
 
         f = y.clone();
         (c, _) = divmod(&c, &y);

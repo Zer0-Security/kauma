@@ -1,6 +1,6 @@
 {
     "testcases": {
-        "affbf44781": {
+        "gfmul_1": {
             "action": "gfmul",
             "arguments": {
                 "semantic": "xex",

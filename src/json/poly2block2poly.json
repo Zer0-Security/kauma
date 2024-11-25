@@ -1,6 +1,6 @@
 {
     "testcases": {
-                "affbfd174781": {
+                "poly2block_xex_1": {
             "action": "poly2block",
             "arguments": {
                 "semantic": "xex",
@@ -12,14 +12,14 @@
                 ]
             }                
         },
-        "affbf4fc-4d2a-474781": {
+        "block2poly_xex_1": {
             "action": "block2poly",
             "arguments": {
                 "semantic": "xex",
                 "block": "ARIAAAAAAAAAAAAAAAAAgA=="
             }
         },
-        "1": {
+        "block2poly_gcm_1": {
             "action": "block2poly",
             "arguments": {
                 "semantic": "gcm",
@@ -27,7 +27,7 @@
             }
         }
         ,
-        "2": {
+        "block2poly_gcm_2": {
             "action": "block2poly",
             "arguments": {
                 "semantic": "gcm",

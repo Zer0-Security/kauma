@@ -1,6 +1,6 @@
 {
     "testcases": {
-        "affbfehiof44781": {
+        "sea128_encrypt_1": {
             "action": "sea128",
             "arguments": {
                 "mode": "encrypt",
@@ -8,7 +8,7 @@
                 "input": "yv66vvrO263eyviIiDNEVQ=="
             }
         },
-        "affbhujklfehiof44781": {
+        "sea128_decrypt_1": {
             "action": "sea128",
             "arguments": {
                 "mode": "decrypt",

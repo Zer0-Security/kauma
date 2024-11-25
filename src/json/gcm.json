@@ -1,6 +1,6 @@
 {
     "testcases": {
-        "1ffbfehiof44781": {
+        "gcm_encrypt_aes128_test_1": {
             "action": "gcm_encrypt",
             "arguments": {
                 "algorithm": "aes128",
@@ -10,7 +10,7 @@
                 "ad": "QUQtRGF0ZW4="
             }
         },
-        "2ffbhujklfehiof44781": {
+        "gcm_encrypt_sea128_test_1": {
             "action": "gcm_encrypt",
             "arguments": {
                 "algorithm": "sea128",
@@ -20,7 +20,7 @@
                 "ad": "QUQtRGF0ZW4="
             }
         },
-        "3249uoihfjnz48392": {
+        "gcm_decrypt_aes128_test_1": {
             "action": "gcm_decrypt",
             "arguments": {
                 "algorithm": "aes128",
@@ -31,7 +31,7 @@
                 "tag": "Mp0APJb/ZIURRwQlMgNN/w=="
             }
         },
-        "4gcwbuqo54678iuehjdbgvztw4": {
+        "gcm_decrypt_sea128_test_1": {
             "action": "gcm_decrypt",
             "arguments": {
                 "algorithm": "sea128",
