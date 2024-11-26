@@ -73,6 +73,10 @@ fn correct_padding(mut stream: &TcpStream, intermediate_state: &Vec<u8>, byte_nu
                 potential_padding.push(i as u8);
             }
         }
+
+        if potential_padding.len() == 1 {
+            return Ok(potential_padding[0] as u8 ^ (16 - byte_num as u8))
+        }
             
         // Create the 4-byte header (representing the number of 16-byte blocks sent to server)
         let lenght: u16 = 1;
