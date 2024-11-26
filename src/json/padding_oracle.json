@@ -18,7 +18,7 @@
                 "ciphertext": "QENCRURHRklIS0pNTE9OUQAAAAAAAAAASUlJSUlJSUk="
             }
         },
-        "gcm_decrypt_sea128_test_3": {
+        "padding_oracle_3": {
             "action": "padding_oracle",
             "arguments": {
                 "hostname": "127.0.0.1",
