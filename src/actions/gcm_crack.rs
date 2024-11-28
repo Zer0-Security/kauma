@@ -40,6 +40,7 @@ pub fn execute(
         ddf.extend(gfpoly_operations::ddf(&poly.0));
     }
 
+    // Get all H-Candiadtates
     let mut h_candidates: Vec<Vec<u8>> = Vec::new();
     for poly in ddf {
         if poly.1 == 1 {
@@ -54,13 +55,14 @@ pub fn execute(
         }
     }
 
+    // Get the coressponding H_ek to the H-Canditates
     let mut h_ek: Vec<(Vec<u8>, Vec<u8>)> = Vec::new();
-
     for h in h_candidates {
         let result = gcm::ghash(m1.0.clone(), h.clone(), m1.1.clone());
         h_ek.push((h.clone(), gf_operations::add_vec(&result.0, &m1.2.clone())));
     }
 
+    // Check what tuple sis the correct one
     let mut correct_h_ek: (Vec<u8>, Vec<u8>) = (Vec::new(), Vec::new());
     for tuple in h_ek {
         let result = gcm::ghash(m3.0.clone(), tuple.0.clone(), m3.1.clone());
@@ -71,6 +73,7 @@ pub fn execute(
         }
     }
 
+    // Authenticate m4
     let result = gcm::ghash(forgery.0.clone(), correct_h_ek.0.clone(), forgery.1.clone());
     let auth_tag = gf_operations::add_vec(&result.0, &correct_h_ek.1);
 

@@ -257,7 +257,7 @@ pub fn ddf(f: &Vec<Vec<u8>>) -> Vec<(Vec<Vec<u8>>, u128)> {
     let mut z: Vec<(Vec<Vec<u8>>, u128)> = Vec::new();
     let mut d: u32 = 1;
 
-    // Represent the polynomial 'x' in your format (monomial of degree 1)
+    // Represent the polynomial 'x'
     let mut x = vec![vec![0u8; 16]; 2];
     x[1][0] = 0x80;
 

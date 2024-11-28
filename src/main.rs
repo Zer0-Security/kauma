@@ -275,7 +275,7 @@ fn main() {
                 json!({
                     "tag": de_encode_base64::encode(tag),
                     "H": de_encode_base64::encode(h),
-                    "Mask": de_encode_base64::encode(mask)
+                    "mask": de_encode_base64::encode(mask)
                 })
             }
         };
