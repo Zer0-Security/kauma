@@ -1,0 +1,31 @@
+{
+    "testcases": {
+      "padding_oracle_1": {
+        "action": "padding_oracle",
+            "arguments": {
+                "hostname": "127.0.0.1",
+                "port": 1337,
+                "iv": "",
+                "ciphertext": "AgEABwYFBAsKCQgPDwwNEQ=="
+            }
+        },
+        "padding_oracle_2": {
+            "action": "padding_oracle",
+            "arguments": {
+                "hostname": "127.0.0.1",
+                "port": 1337,
+                "iv": "AAAAAAAAAAAAAAAAAAAAAA==",
+                "ciphertext": "QENCRURHRklIS0pNTE9OUQAAAAAAAAAASUlJSUlJSUk="
+            }
+        },
+        "padding_oracle_3": {
+            "action": "padding_oracle",
+            "arguments": {
+                "hostname": "127.0.0.1",
+                "port": 1337,
+                "iv": "",
+                "ciphertext": "SWdvaGomUGd7Zm8tLVpneTtFBR9PQXcbFx8QAAA7HgxIZzU7KCsfcHVmOixFWmF5aQxCH1pCahMPTTcmTlJobw=="
+            }
+        }
+    }
+} 

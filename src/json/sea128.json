@@ -1,0 +1,20 @@
+{
+    "testcases": {
+        "sea128_encrypt_1": {
+            "action": "sea128",
+            "arguments": {
+                "mode": "encrypt",
+                "key": "istDASeincoolerKEYrofg==",
+                "input": "yv66vvrO263eyviIiDNEVQ=="
+            }
+        },
+        "sea128_decrypt_1": {
+            "action": "sea128",
+            "arguments": {
+                "mode": "decrypt",
+                "key": "istDASeincoolerKEYrofg==",
+                "input": "D5FDo3iVBoBN9gVi9/MSKQ=="
+            }
+        }
+    }
+}    

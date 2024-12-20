@@ -1,0 +1,38 @@
+{
+    "testcases": {
+                "poly2block_xex_1": {
+            "action": "poly2block",
+            "arguments": {
+                "semantic": "xex",
+                "coefficients": [
+                    12,
+                    127,
+                    9,
+                    0
+                ]
+            }                
+        },
+        "block2poly_xex_1": {
+            "action": "block2poly",
+            "arguments": {
+                "semantic": "xex",
+                "block": "ARIAAAAAAAAAAAAAAAAAgA=="
+            }
+        },
+        "block2poly_gcm_1": {
+            "action": "block2poly",
+            "arguments": {
+                "semantic": "gcm",
+                "block": "shAAAAAAAAAAAAAAAAAAAA=="
+            }
+        }
+        ,
+        "block2poly_gcm_2": {
+            "action": "block2poly",
+            "arguments": {
+                "semantic": "gcm",
+                "block": "QAAAAAAAAAAAAAAAAAAAAA=="
+            }
+        }
+    }
+}    

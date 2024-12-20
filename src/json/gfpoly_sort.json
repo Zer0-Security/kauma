@@ -1,0 +1,34 @@
+{
+    "testcases": {
+        "gfpoly_sort_1": {
+            "action": "gfpoly_sort",
+            "arguments": {
+            "polys": [
+                    [
+                    "NeverGonnaGiveYouUpAAA==",
+                    "NeverGonnaLetYouDownAA==",
+                    "NeverGonnaRunAroundAAA==",
+                    "AndDesertYouAAAAAAAAAA=="
+                    ],
+                    [
+                    "WereNoStrangersToLoveA==",
+                    "YouKnowTheRulesAAAAAAA==",
+                    "AndSoDoIAAAAAAAAAAAAAA=="
+                    ],
+                    [
+                    "NeverGonnaMakeYouCryAA==",
+                    "NeverGonnaSayGoodbyeAA==",
+                    "NeverGonnaTellALieAAAA==",
+                    "AndHurtYouAAAAAAAAAAAA=="
+                    ],
+                    [
+                    "NeverGonnaMakeYouCryAA==",
+                    "NeverGonnaSayGoodbyeAA==",
+                    "NeverGonnaTellALieAAAA==",
+                    "AndHurtYouHAAAAAAAAAAA=="
+                    ]
+                ]
+            }
+        }
+    }
+}    
